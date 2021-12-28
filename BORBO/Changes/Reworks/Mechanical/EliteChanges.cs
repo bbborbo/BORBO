@@ -39,7 +39,7 @@ namespace Borbo
                 if (etd.eliteTypes == eliteTypes)
                 {
                     etd.healthBoostCoefficient = Mathf.Pow(CombatDirector.baseEliteHealthBoostCoefficient, 2);
-                    etd.damageBoostCoefficient = 6f;
+                    etd.damageBoostCoefficient = 4.5f;
 
                     etd.isAvailable = (SpawnCard.EliteRules rules) =>
                     (Run.instance.stageClearCount > Tier2EliteMinimumStageDrizzle && rules == SpawnCard.EliteRules.Default && Run.instance.selectedDifficulty <= DifficultyIndex.Easy)

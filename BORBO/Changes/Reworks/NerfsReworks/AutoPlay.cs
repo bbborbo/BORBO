@@ -30,7 +30,7 @@ namespace Borbo
 
 		private static float willowispBaseDamage = 3.5f;
 		private static float willowispScaleFraction = 0.8f;
-		private static float willowispBaseRange = 15f;
+		private static float willowispBaseRange = 16f;
 		private static float willowispStackRange = 0f;
 
 		private static float gasBaseBurnDuration = 0.5f;
@@ -105,10 +105,37 @@ namespace Borbo
 				$"Additionally, enemies <style=cIsDamage>burn</style> " +
 				$"for <style=cIsDamage>{50 * (gasBaseBurnDuration + gasStackBurnDuration)}%</style> " +
 				$"<style=cStack>(+{50 * (gasStackBurnDuration)}% per stack)</style> base damage.");
-
 		}
 
-        private void RazorwireNerf(ILContext il)
+		#region nkuhana
+		float nkuhanaNewDamageMultiplier = 3.5f; //2.5
+		void BuffNkuhana()
+		{
+			IL.RoR2.HealthComponent.ServerFixedUpdate += NkuhanasBuff;
+			Main.useNkuhanaKnockbackSlow = true;
+
+			LanguageAPI.Add("ITEM_NOVAONHEAL_DESC",
+				$"Store <style=cIsHealing>100%</style> <style=cStack>(+100% per stack)</style> of healing as <style=cIsHealing>Soul Energy</style>. " +
+				$"After your <style=cIsHealing>Soul Energy</style> reaches <style=cIsHealing>10%</style> of your <style=cIsHealing>maximum health</style>, " +
+				$"<style=cIsDamage>fire a skull</style> that deals <style=cIsDamage>{Tools.ConvertDecimal(nkuhanaNewDamageMultiplier)}</style> " +
+				$"of your <style=cIsHealing>Soul Energy</style> as <style=cIsDamage>damage</style>.");
+		}
+
+		private void NkuhanasBuff(ILContext il)
+		{
+			ILCursor c = new ILCursor(il);
+
+			c.GotoNext(MoveType.Before,
+				x => x.MatchStfld<DevilOrb>(nameof(DevilOrb.damageValue))
+				);
+
+			c.Index -= 2;
+			c.Remove();
+			c.Emit(OpCodes.Ldc_R4, nkuhanaNewDamageMultiplier);
+		}
+		#endregion
+
+		private void RazorwireNerf(ILContext il)
         {
 			ILCursor c = new ILCursor(il);
 

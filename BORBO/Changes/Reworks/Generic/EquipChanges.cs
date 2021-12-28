@@ -17,11 +17,6 @@ namespace Borbo
         };
         void ChangeAIBlacklists()
         {
-            RoR2Content.Equipment.CrippleWard.enigmaCompatible = true;
-            RoR2Content.Equipment.Jetpack.enigmaCompatible = true;
-            RoR2Content.Equipment.Lightning.cooldown = 20;
-            RoR2Content.Equipment.DroneBackup.cooldown = 60;
-
             On.RoR2.Inventory.SetEquipmentIndex += BlacklistEquipmentFromScavengers;
         }
 

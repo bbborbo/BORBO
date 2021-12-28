@@ -48,7 +48,7 @@ namespace Borbo
                             {
                                 if (currentStage.stage == Stage.SkyMeadow)
                                 {
-                                    dc.Card.selectionWeight = 10;
+                                    dc.Card.selectionWeight = 12;
                                 }
                                 else
                                 {

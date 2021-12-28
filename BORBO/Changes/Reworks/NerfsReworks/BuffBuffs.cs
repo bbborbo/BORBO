@@ -70,7 +70,10 @@ namespace Borbo
         #region slows
         GameObject templarPrefab = Resources.Load<GameObject>("prefabs/characterbodies/ClayBruiserBody");
         GameObject chimeraWispPrefab = Resources.Load<GameObject>("prefabs/characterbodies/LunarWispBody");
+        static float tarSlowAspdReduction = 0.3f;
         static float kitSlowAspdReduction = 0.3f;
+        static float chronoSlowAspdReduction = 0.5f;
+        static float chillSlowAspdReduction = 0.6f;
 
         void BuffSlows()
         {
@@ -88,13 +91,13 @@ namespace Borbo
             float aspdDecreaseAmt = 0;
 
             if (sender.HasBuff(RoR2Content.Buffs.Slow30)) //tar
-                aspdDecreaseAmt += 0.3f;
+                aspdDecreaseAmt += tarSlowAspdReduction;
             if (sender.HasBuff(RoR2Content.Buffs.Slow50)) //kit
                 aspdDecreaseAmt += kitSlowAspdReduction;
             if (sender.HasBuff(RoR2Content.Buffs.Slow60)) //chronobauble
-                aspdDecreaseAmt += 0.5f;
+                aspdDecreaseAmt += chronoSlowAspdReduction;
             if (sender.HasBuff(RoR2Content.Buffs.Slow80)) //cold
-                aspdDecreaseAmt += 0.6f;
+                aspdDecreaseAmt += chillSlowAspdReduction;
 
             args.attackSpeedDivAdd += aspdDecreaseAmt;
         }

@@ -14,6 +14,7 @@ using System.Linq;
 using Borbo.CoreModules;
 using Borbo.Equipment;
 using Borbo.Items;
+using Borbo.Scavengers;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -71,6 +72,7 @@ namespace Borbo
             InitializeItems();
             InitializeEquipment();
             InitializeEliteEquipment();
+            InitializeScavengers();
 
             if (isAELoaded)
             {
@@ -100,7 +102,7 @@ namespace Borbo
                 this.AdjustVanillaMobility();
                 this.AdjustVanillaHealing();
 
-                this.DoSpeedScavenger();
+                //this.DoSpeedScavenger();
             }
             if (IsCategoryEnabled(BalanceCategory.StateOfHealth))
             {
@@ -111,7 +113,7 @@ namespace Borbo
                 this.FuckingFixInfusion();
                 //nerf engi turret max health?
 
-                this.DoBoboScavenger();
+                //this.DoBoboScavenger();
             }
             if (IsCategoryEnabled(BalanceCategory.StateOfInteraction))
             {
@@ -128,9 +130,13 @@ namespace Borbo
                 this.ReworkShatterspleen();
 
                 this.ChangeAIBlacklists();
-                this.StunChanges();
                 AIBlacklistSingleItem(RoR2Content.Items.NovaOnHeal);
                 AIBlacklistSingleItem(RoR2Content.Items.Mushroom);
+                RoR2Content.Equipment.CrippleWard.enigmaCompatible = true;
+                RoR2Content.Equipment.Jetpack.enigmaCompatible = true;
+                RoR2Content.Equipment.DroneBackup.cooldown = 60;
+
+                this.StunChanges();
 
                 //scav could have royal cap? cunning
             }
@@ -147,7 +153,7 @@ namespace Borbo
                 this.EditWarCry();
                 this.StickyRework();
 
-                this.DoSadistScavenger();
+                //this.DoSadistScavenger();
             }
             if (IsCategoryEnabled(BalanceCategory.StateOfEconomy))
             {
@@ -157,7 +163,7 @@ namespace Borbo
                 this.FixMoneyScaling();
                 this.NerfBazaarStuff();
 
-                this.DoGreedyScavenger();
+                //this.DoGreedyScavenger();
             }
             if (IsCategoryEnabled(BalanceCategory.StateOfDifficulty))
             {
@@ -196,6 +202,7 @@ namespace Borbo
             new ContentPacks().Initialize();
         }
 
+        #region config
         private void InitializeConfig()
         {
             CustomConfigFile = new ConfigFile(Paths.ConfigPath + "\\BORBO.cfg", true);
@@ -238,7 +245,58 @@ namespace Borbo
                 Debug.Log("Core Module: " + coreModule + " Initialized!");
             }
         }
+        #endregion
 
+        #region twisted scavs
+
+        public List<TwistedScavengerBase> Scavs = new List<TwistedScavengerBase>();
+        public static Dictionary<TwistedScavengerBase, bool> ScavStatusDictionary = new Dictionary<TwistedScavengerBase, bool>();
+        private void InitializeScavengers()
+        {
+            var ScavTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(TwistedScavengerBase)));
+
+            foreach (var scavType in ScavTypes)
+            {
+                TwistedScavengerBase scav = (TwistedScavengerBase)System.Activator.CreateInstance(scavType);
+
+                if (ValidateScav(scav, Scavs))
+                {
+                    scav.PopulateItemInfos(CustomConfigFile);
+                    scav.Init(CustomConfigFile);
+                }
+                else
+                {
+                    Debug.Log("Scavenger: " + scav.ScavLangTokenName + " did not initialize!");
+                }
+            }
+        }
+
+        bool ValidateScav(TwistedScavengerBase scav, List<TwistedScavengerBase> scavList)
+        {
+            BalanceCategory category = scav.Category;
+
+            bool enabled = true;
+
+            if (category != BalanceCategory.None && category != BalanceCategory.Count)
+            {
+                string name = scav.ScavName.Replace("'", "");
+                enabled = IsCategoryEnabled(category) &&
+                CustomConfigFile.Bind<bool>(category.ToString(), $"Enable Twisted Scavenger: {name}", true, "Should this scavenger appear in A Moment, Whole?").Value;
+            }
+            else
+            {
+                Debug.Log($"{scav.ScavLangTokenName} initializing into Balance Category: {category}!!");
+            }
+
+            //ItemStatusDictionary.Add(item, itemEnabled);
+
+            if (enabled)
+            {
+                scavList.Add(scav);
+            }
+            return enabled;
+        }
+        #endregion
 
         #region items
 
@@ -292,7 +350,6 @@ namespace Borbo
             return itemEnabled;
         }
         #endregion
-        
         
         #region equips
 

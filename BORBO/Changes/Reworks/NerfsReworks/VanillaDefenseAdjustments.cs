@@ -42,8 +42,10 @@ namespace Borbo
 
             IL.RoR2.HealthComponent.TakeDamage += TeddyChanges;
             LanguageAPI.Add("ITEM_BEAR_DESC",
-                "<style=cIsHealing>7.5%</style> <style=cStack>(+7.5% per stack)</style> chance to <style=cIsHealing>block</style> incoming damage. " +
-                "<style=cIsUtility>Unaffected by luck</style>.");
+                $"<style=cIsHealing>{15 * teddyNewMaxValue}%</style> " +
+                $"<style=cStack>(+{15 * teddyNewMaxValue}% per stack)</style> " +
+                $"chance to <style=cIsHealing>block</style> incoming damage. " +
+                $"<style=cIsUtility>Unaffected by luck</style>.");
         }
         private void FreeBonusArmor(CharacterBody sender, StatHookEventArgs args)
         {

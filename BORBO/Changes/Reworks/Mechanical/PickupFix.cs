@@ -11,7 +11,7 @@ namespace Borbo
     internal partial class Main : BaseUnityPlugin
     {
         GameObject healPack = Resources.Load<GameObject>("prefabs/networkedobjects/HealPack");
-        float toothDuration = 15;
+        float toothDuration = 15; //5
 
         GameObject ammoPack = Resources.Load<GameObject>("prefabs/networkedobjects/AmmoPack");
         GameObject moneyPack = Resources.Load<GameObject>("prefabs/networkedobjects/BonusMoneyPack");
@@ -19,11 +19,11 @@ namespace Borbo
         public void FixPickupStats()
         {
             BuffPickupRange(healPack);
-            BuffPickupRange(ammoPack);
-            BuffPickupRange(moneyPack);
-
             healPack.GetComponent<DestroyOnTimer>().duration = toothDuration;
             healPack.GetComponent<BeginRapidlyActivatingAndDeactivating>().delayBeforeBeginningBlinking = (toothDuration - 2f);
+
+            BuffPickupRange(ammoPack);
+            BuffPickupRange(moneyPack);
 
             On.RoR2.GravitatePickup.OnTriggerEnter += ChangeGravitateTargetBehavior;
         }

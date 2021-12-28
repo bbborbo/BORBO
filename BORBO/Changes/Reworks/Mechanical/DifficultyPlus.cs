@@ -25,7 +25,7 @@ namespace Borbo
         public static float normalTeleParticleRadius = 0.8f;
         public static float hardTeleParticleRadius = 0.4f;
         public static float eclipseTeleParticleRadius = 0f;
-        public static float defaultTeleParticleRadius = 1f;
+        public static float defaultTeleParticleRadius = 0.8f;
 
         #region all enemies
         //enemies

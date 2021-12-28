@@ -3,6 +3,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
+using RoR2.Orbs;
 using RoR2.Projectile;
 using System;
 using System.Collections.Generic;
@@ -25,12 +26,13 @@ namespace Borbo
 
         #region stuns
         public static float capacitorDamageCoefficient = 10f;
-        public static float capacitorBlastRadius = 10f;
-        public static float capacitorCooldown = 20f;
+        public static float capacitorBlastRadius = 13f;
+        public static float capacitorCooldown = 20f; //20
         void StunChanges()
         {
             RoR2Content.Items.StunChanceOnHit.tier = ItemTier.NoTier;
 
+            RoR2Content.Equipment.Lightning.cooldown = capacitorCooldown;
             IL.RoR2.EquipmentSlot.FireLightning += CapacitorNerf;
             IL.RoR2.Orbs.LightningStrikeOrb.OnArrival += CapacitorBuff;
             LanguageAPI.Add("EQUIPMENT_LIGHTNING_DESC", $"Call down a lightning strike on a targeted monster, " +
@@ -181,34 +183,6 @@ namespace Borbo
             c.Index--;
             c.Remove();
             c.Emit(OpCodes.Ldc_I4, (int)falloffModel);
-        }
-        #endregion
-
-        #region nkuhana
-        float nkuhanaNewDamageMultiplier = 3.5f;
-        void BuffNkuhana()
-        {
-            IL.RoR2.HealthComponent.ServerFixedUpdate += NkuhanasBuff;
-            Main.useNkuhanaKnockbackSlow = true;
-
-            LanguageAPI.Add("ITEM_NOVAONHEAL_DESC",
-                $"Store <style=cIsHealing>100%</style> <style=cStack>(+100% per stack)</style> of healing as <style=cIsHealing>Soul Energy</style>. " +
-                $"After your <style=cIsHealing>Soul Energy</style> reaches <style=cIsHealing>10%</style> of your <style=cIsHealing>maximum health</style>, " +
-                $"<style=cIsDamage>fire a skull</style> that deals <style=cIsDamage>{Tools.ConvertDecimal(nkuhanaNewDamageMultiplier)}</style> " +
-                $"of your <style=cIsHealing>Soul Energy</style> as <style=cIsDamage>damage</style>.");
-        }
-
-        private void NkuhanasBuff(ILContext il)
-        {
-            ILCursor c = new ILCursor(il);
-
-            c.GotoNext(MoveType.Before,
-                x => x.MatchStfld<DevilOrb>(nameof(DevilOrb.damageValue))
-                );
-
-            c.Index -= 2;
-            c.Remove();
-            c.Emit(OpCodes.Ldc_R4, nkuhanaNewDamageMultiplier);
         }
         #endregion
 
