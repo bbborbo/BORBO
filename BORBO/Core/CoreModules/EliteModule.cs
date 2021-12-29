@@ -16,20 +16,7 @@ namespace Borbo.CoreModules
 
         public override void Init()
         {
-            IL.RoR2.CharacterModel.UpdateMaterials += AddEliteMaterial;
             RoR2Application.onLoad += AddElites;
-            RoR2.CharacterBody.onBodyStartGlobal += AddEliteBehaviour;
-        }
-
-        private void AddEliteBehaviour(CharacterBody body)
-        {
-            if(!body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless) && body.master.inventory)
-            {
-                EliteBehaviour EB = body.gameObject.AddComponent<EliteBehaviour>();
-                EB.body = body;
-                EB.CheckForItems(); 
-                body.onInventoryChanged += EB.CheckForItems;
-            }
         }
 
         #region Hooks
@@ -50,30 +37,6 @@ namespace Borbo.CoreModules
                         break;
                 }
             }
-        }
-
-        private static void AddEliteMaterial(ILContext il)
-        {
-            ILCursor c = new ILCursor(il);
-            c.GotoNext(
-                MoveType.After,
-                x => x.MatchLdarg(0),
-                x => x.MatchLdfld<CharacterModel>("propertyStorage"),
-                x => x.MatchLdsfld(typeof(CommonShaderProperties), "_EliteIndex")
-            );
-            c.GotoNext(
-                MoveType.After,
-                x => x.MatchCallOrCallvirt<MaterialPropertyBlock>("SetFloat")
-            );
-            c.Emit(OpCodes.Ldarg, 0);
-            c.EmitDelegate<Action<CharacterModel>>((model) =>
-            {
-                var body = model.body;
-                if (body)
-                {
-                    body.GetComponent<EliteBehaviour>()?.UpdateShaderRamp();
-                }
-            });
         }
         #endregion
 
