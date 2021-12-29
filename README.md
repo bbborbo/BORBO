@@ -12,7 +12,6 @@ The idea of having packets of changes is to allow users to customize the scope o
 Healing:
 - Medkit now heals for 8% of max health (+25 flat per stack)
 - Monster Tooth now heals for 3% of max health (+8 flat per stack)
-- Harvester's Scythe healing reduced from 8(+4 per stack) to 3(+3 per stack)
 
 Mobility:
 - Goat Hoof speed bonus reduced from 14% to 10%
@@ -21,8 +20,10 @@ Mobility:
 
 Defense:
 - Tougher Times dodge chance function modified; now approaches 60% as stacks approach infinity (instead of 100%)
+```
 
-
+### FEATURES & CONTENT...
+```
 Added Items: Borbo's Band, Frozen Turtle Shell
 Added Equipment: Master Ninja Gear
 Added Scavenger: Baba the Enlightened
@@ -30,6 +31,9 @@ Added Scavenger: Baba the Enlightened
 
 ### OTHER...
 ```
+(Harvester's Scythe packet)
+- Healing reduced from 8(+4 per stack) to 3(+3 per stack)
+
 (Dynamic Jump packet)
 - Holding the jump input now lets you jump up to 130% as high
 - Releasing the jump input early now lets you jump up to 80% as high
@@ -48,7 +52,7 @@ Added Scavenger: Baba the Enlightened
 - Meat regen boost can now stack
 
 (K'kuhana's Opinion packet, D+H)
-* Wanted to keep Opinion relevant despite healing nerfs. Feel free to turn this packet off if you hate what this mod stands for. *
+* Wanted to keep Opinion relevant despite healing nerfs. *
 - Damage increased from 250% of healing taken to 350%
 - Now pushes enemies hit away from the player
 
@@ -77,6 +81,13 @@ Added Scavenger: Baba the Enlightened
 
 ### ESSENTIAL CHANGES...
 ```
+(Barrier)
+- Barrier now decays by 1/6 of current barrier (instead of 1/30 of max barrier) each second
+- Aegis now also reduces barrier decay rate by 33%
+```
+
+### FEATURES & CONTENT...
+```
 Added Items: Utility Belt, Flower Crown
 Added Equipment: Remarkably Stable Tesla Coil (replaces Unstable Tesla Coil)
 Added Scavenger: Bobo the Unbreakable
@@ -84,10 +95,6 @@ Added Scavenger: Bobo the Unbreakable
 
 ### OTHER...
 ```
-(Barrier General packet)
-- Barrier now decays by 1/6 of current barrier (instead of 1/30 of max barrier) each second
-- Aegis now also reduces barrier decay rate by 33%
-
 (Infusion packet)
 - Reduced health limit from 100 health to 30; configurable
 - Health gained from infusion now also increases by 20% for each player level
@@ -98,22 +105,27 @@ Added Scavenger: Bobo the Unbreakable
 
 ### ESSENTIAL CHANGES...
 ```
-(Boss Items)
+Boss Items:
 - All bosses now have a chance to drop their boss items on death
 - Boss items no longer drop from the teleporter (Someone remind me to look into replacing this feature at a later date)
 * This can be configured for Aurelionite *
-- Removed Overgrown Printers entirely
 
-(Misc)
+Misc:
 - Chill Slow now also reduces attack speed of those afflicted by 60%
 - Reduced Lunar Chimera Wisp base attack speed to 70%
+```
 
+### FEATURES & CONTENT...
+```
 Added Items: AtG Missile Mk.3 (replaces Mk.1), Wicked Band, Magic Quiver, Permafrost
 Added Equipment: Old Guillotine (replaces Old Guillotine)
 ```
 
 ### OTHER...
 ```
+(Boss Printers packet)
+- Removed Overgrown Printers entirely
+
 (Shattering Justice packet)
 - Shattering Justice now instantly pulverizes on hits that deal more than 800% base damage on top of vanilla effects
 
@@ -163,16 +175,19 @@ Added Equipment: Old Guillotine (replaces Old Guillotine)
 
 ### ESSENTIAL CHANGES...
 ```
-Razorwire
+Razorwire:
 - Reduced proc coefficient from 0.5 to 0.2
 - Increased damage from 160% to 360%
 - Added an internal cooldown for 1 second between razors
 
-Misc
-- Runald's Band changed to deal 600% base + 100% total damage instead of 250% total
-- Kjaro's Band changed to deal 600% base + 100% total damage instead of 250% total
+Damage:
+- Runald's Band changed to deal 600% base plus 100% (+100% per stack) total damage instead of 250% total
+- Kjaro's Band changed to deal 600% base plus 100% (+100% per stack) total damage instead of 250% total
 - Sticky bomb moved to green tier. Now has a 5% chance (+5% per stack) to deal 320% damage (+40% per stack).
+```
 
+### FEATURES & CONTENT...
+```
 Added Items: Chefs Stache, The New Lopper, Enchanted Whetstone
 Added Scavenger: Chipchip the Wicked
 ```
@@ -237,7 +252,10 @@ Added Scavenger: Chipchip the Wicked
 - Big Drones now have a cost multiplier of 8x instead of 14x
 - AWU now has adaptive armor to help match chest cost scaling
 - Monsters spawned by the teleporter event drop even less gold. Spend more time in combat!
+```
 
+### FEATURES & CONTENT...
+```
 Added Item: Golden Gun
 Added Scavenger: Gibgib the Greedy
 ```
@@ -267,16 +285,24 @@ Added Scavenger: Gibgib the Greedy
 - Reduced the rate at which the Difficulty Coefficient scales over stages from 115% to 110%
 - Increased the rate at which the Difficulty Coefficient scales over time from 100% to 120%
 - The Difficulty Slider starts at a higher level depending on the difficulty setting. No longer are the days where every difficulty starts just as easy as the others.
-- The radius of the teleporter's particles is smaller depending on the difficulty setting. 125% in drizzle, 100% in rainstorm, 50% in monsoon, and no particles in eclipse.
 - Tier 2 elites spawn earlier depending on the difficulty setting. Stage 1 in eclipse, stage 4 in monsoon, stage 6 in rainstorm (the default), and stage 11 in drizzle.
-- Monsoon Only: All monsters gain unique scaling stat bonuses.
+```
 
+### FEATURES & CONTENT...
+```
 Added T1 Elites: Frenzied, Volatile
 Added T2 Elite: Serpentine
 ```
 
 ### OTHER...
 ```
+(Monsoon Stat Boost packet)
+- Monsoon Only: All monsters gain unique scaling stat bonuses.
+
+(Teleporter packet)
+- The radius of the teleporter's particles is smaller depending on the difficulty setting. 
+- 125% in drizzle, 100% in rainstorm, 50% in monsoon, and no particles in eclipse; configurable.
+
 (Elite Stat packet)
 - Reduced the health boost of base Tier 1 elites from 4x to 3x
 - Reduced the health boost of Tier 2 elites from 18x to 9x
