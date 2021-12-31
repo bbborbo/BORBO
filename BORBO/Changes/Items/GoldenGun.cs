@@ -16,7 +16,6 @@ namespace Borbo.Items
     class CoinGun : ItemBase<CoinGun>
     {
         public static int baseGoldChunk = 25;
-        public static int maxGoldChunks = 10;
         public static bool includeDeploys = true;
 
         static float bonusDamagePerChunk = 0.04f;
@@ -28,7 +27,7 @@ namespace Borbo.Items
         public static BuffDef goldDamageBuff;
         public static int maxGold = 9;
         public static BuffDef platinumDamageBuff;
-        public static BuffDef[] coinDamageBuffs = new BuffDef[4] { bronzeDamageBuff, silverDamageBuff, goldDamageBuff, platinumDamageBuff };
+        public static int maxPlatinum = 10;
 
         string damageBoostPerChestPerStack = Tools.ConvertDecimal(bonusDamagePerChunk);
 
@@ -40,7 +39,7 @@ namespace Borbo.Items
 
         public override string ItemFullDescription => $"<style=cIsUtility>Gain {Tools.ConvertDecimal(bonusGold)} extra gold</style>. " +
             $"Also deal <style=cIsDamage>{damageBoostPerChestPerStack} <style=cStack>(+{damageBoostPerChestPerStack} per stack)</style></style> " +
-            $"bonus damage <style=cIsDamage>per chest you can afford</style>, for up to a maximum of <style=cIsUtility>{maxGoldChunks} chests</style>.";
+            $"bonus damage <style=cIsDamage>per chest you can afford</style>, for up to a maximum of <style=cIsUtility>{maxPlatinum} chests</style>.";
 
         public override string ItemLore => "";
 
@@ -127,7 +126,7 @@ namespace Borbo.Items
                         float damageMult = Mathf.Sqrt(1 + bonusDamagePerChunk * ((damageBoostCount + 1) * itemcount));
 
                         damageInfo.damage *= damageMult;*/
-                        if(Util.CheckRoll((damageBoostCount / maxGoldChunks) * 100, master))
+                        if(Util.CheckRoll((damageBoostCount / maxPlatinum) * 100, master))
                         {
                             EffectManager.SimpleImpactEffect(Resources.Load<GameObject>("Prefabs/Effects/ImpactEffects/CoinImpact"), damageInfo.position, Vector3.up, true);
                         }
@@ -148,10 +147,10 @@ namespace Borbo.Items
 
         void CreateBuff()
         {
-            GenerateCoinDamageBuff(ref bronzeDamageBuff, "Bronze", new Color(0.8f, 0.5f, 0.2f));
-            GenerateCoinDamageBuff(ref silverDamageBuff, "Silver", Color.gray);
-            GenerateCoinDamageBuff(ref goldDamageBuff, "Gold", Color.yellow);
-            GenerateCoinDamageBuff(ref platinumDamageBuff, "Platinum", Color.white);
+            GenerateCoinDamageBuff(ref bronzeDamageBuff, "Bronze", new Color(0.7f, 0.5f, 0.2f));
+            GenerateCoinDamageBuff(ref silverDamageBuff, "Silver", new Color(0.6f, 0.6f, 0.6f));
+            GenerateCoinDamageBuff(ref goldDamageBuff, "Gold", new Color(1.0f, 0.8f, 0.15f));
+            GenerateCoinDamageBuff(ref platinumDamageBuff, "Platinum", new Color(0.9f, 0.9f, 1.0f));
         }
 
         static string baseName = "CoinGunDamageBoost";
@@ -197,7 +196,7 @@ namespace Borbo.Items
                 if (deployable) currentMoney += deployable.ownerMaster.money;
             }
 
-            int newBuffCount = Mathf.Clamp((int)(currentMoney / fixedBaseChestCost), 0, CoinGun.maxGoldChunks);
+            int newBuffCount = Mathf.Clamp((int)(currentMoney / fixedBaseChestCost), 0, CoinGun.maxPlatinum);
 
             if (damageBoostCount == newBuffCount)
                 return;
