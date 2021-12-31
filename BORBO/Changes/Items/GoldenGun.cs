@@ -13,7 +13,7 @@ using static R2API.RecalculateStatsAPI;
 
 namespace Borbo.Items
 {
-    class GoldenGun : ItemBase<GoldenGun>
+    class CoinGun : ItemBase<CoinGun>
     {
         public static int baseGoldChunk = 25;
         public static int maxGoldChunks = 10;
@@ -21,11 +21,18 @@ namespace Borbo.Items
 
         static float bonusDamagePerChunk = 0.04f;
         float bonusGold = 0.1f;
+        public static BuffDef bronzeDamageBuff;
+        public static int maxBronze = 3;
+        public static BuffDef silverDamageBuff;
+        public static int maxSilver = 6;
         public static BuffDef goldDamageBuff;
+        public static int maxGold = 9;
+        public static BuffDef platinumDamageBuff;
+        public static BuffDef[] coinDamageBuffs = new BuffDef[4] { bronzeDamageBuff, silverDamageBuff, goldDamageBuff, platinumDamageBuff };
 
         string damageBoostPerChestPerStack = Tools.ConvertDecimal(bonusDamagePerChunk);
 
-        public override string ItemName => "Golden Gun";
+        public override string ItemName => "Coin Gun";
 
         public override string ItemLangTokenName => "ECONOMYWEAPON";
 
@@ -63,9 +70,12 @@ namespace Borbo.Items
         {
             int itemCount = GetCount(sender);
             int buffCount = sender.GetBuffCount(goldDamageBuff);
-            if(itemCount > 0 && buffCount > 0)
+            if(itemCount > 0)
             {
-                float damageMult = Mathf.Sqrt(1 + bonusDamagePerChunk * buffCount * itemCount) - 1;
+                CoinGunBehavior coinGun = sender.GetComponent<CoinGunBehavior>();
+                int damageBoostCount = coinGun.damageBoostCount;
+
+                float damageMult = Mathf.Sqrt(1 + bonusDamagePerChunk * damageBoostCount * itemCount) - 1;
 
                 args.damageMultAdd += damageMult;
             }
@@ -78,7 +88,7 @@ namespace Borbo.Items
             {
                 if (self.master)
                 {
-                    GoldGunBehavior GgBehavior = self.AddItemBehavior<GoldGunBehavior>(GetCount(self));
+                    CoinGunBehavior GgBehavior = self.AddItemBehavior<CoinGunBehavior>(GetCount(self));
                 }
             }
         }
@@ -104,7 +114,8 @@ namespace Borbo.Items
                     var itemcount = GetCount(body);
                     if (itemcount > 0)
                     {
-                        int damageBoostCount = body.GetBuffCount(GoldenGun.goldDamageBuff);
+                        CoinGunBehavior coinGun = body.GetComponent<CoinGunBehavior>();
+                        int damageBoostCount = coinGun.damageBoostCount;//body.GetBuffCount(CoinGun.goldDamageBuff);
                         CharacterMaster master = body.master;
                         /*var money = master.money;
                         if (includeDeploys)
@@ -137,29 +148,42 @@ namespace Borbo.Items
 
         void CreateBuff()
         {
-            goldDamageBuff = ScriptableObject.CreateInstance<BuffDef>();
+            GenerateCoinDamageBuff(ref bronzeDamageBuff, "Bronze", new Color(0.8f, 0.5f, 0.2f));
+            GenerateCoinDamageBuff(ref silverDamageBuff, "Silver", Color.gray);
+            GenerateCoinDamageBuff(ref goldDamageBuff, "Gold", Color.yellow);
+            GenerateCoinDamageBuff(ref platinumDamageBuff, "Platinum", Color.white);
+        }
+
+        static string baseName = "CoinGunDamageBoost";
+        static Sprite defaultSprite = Resources.Load<Sprite>("textures/bufficons/texBuffFullCritIcon");
+        static BuffDef GenerateCoinDamageBuff(ref BuffDef coinBuff, string coinType, Color color, Sprite sprite = null)
+        {
+            coinBuff = ScriptableObject.CreateInstance<BuffDef>();
             {
-                goldDamageBuff.name = "MoneyDamageBoost";
-                goldDamageBuff.buffColor = Color.yellow;
-                goldDamageBuff.canStack = true;
-                goldDamageBuff.isDebuff = false;
-                goldDamageBuff.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffFullCritIcon");
+                coinBuff.name = baseName + coinType;
+                coinBuff.iconSprite = (sprite == null) ? defaultSprite : sprite;
+                coinBuff.buffColor = color;
+                coinBuff.canStack = true;
+                coinBuff.isDebuff = false;
             };
-            Assets.buffDefs.Add(goldDamageBuff);
+            Assets.buffDefs.Add(coinBuff);
+
+            return coinBuff;
         }
 
         public static int lastChestBaseCost = 25;
         private void GetChestCostForStage(On.RoR2.Run.orig_BeginStage orig, Run self)
         {
-            lastChestBaseCost = Run.instance.GetDifficultyScaledCost(GoldenGun.baseGoldChunk);
+            lastChestBaseCost = Run.instance.GetDifficultyScaledCost(CoinGun.baseGoldChunk);
             orig(self);
         }
     }
-    public class GoldGunBehavior : CharacterBody.ItemBehavior
+    public class CoinGunBehavior : CharacterBody.ItemBehavior
     {
         public CharacterMaster master;
         public uint currentMoney = 0;
         int fixedBaseChestCost = 0;
+        public int damageBoostCount = 0;
 
         private void FixedUpdate()
         {
@@ -167,30 +191,63 @@ namespace Borbo.Items
                 return;
 
             currentMoney = master.money;
-            if (GoldenGun.includeDeploys)
+            if (CoinGun.includeDeploys)
             {
                 var deployable = master.GetComponent<Deployable>();
                 if (deployable) currentMoney += deployable.ownerMaster.money;
             }
 
-            int currentBuffCount = body.GetBuffCount(GoldenGun.goldDamageBuff);
+            int newBuffCount = Mathf.Clamp((int)(currentMoney / fixedBaseChestCost), 0, CoinGun.maxGoldChunks);
 
-            int damageBoostCount = Mathf.Clamp((int)(currentMoney / fixedBaseChestCost), 0, GoldenGun.maxGoldChunks);
-
-            if (damageBoostCount == currentBuffCount)
+            if (damageBoostCount == newBuffCount)
                 return;
+            damageBoostCount = newBuffCount;
+            Debug.Log(damageBoostCount);
 
-            body.SetBuffCount(GoldenGun.goldDamageBuff.buffIndex, damageBoostCount);
+            //reset buff counts
+            /*foreach(BuffDef coinBuff in CoinGun.coinDamageBuffs)
+            {
+                if(body.GetBuffCount(coinBuff.buffIndex) > 0)
+                {
+                    body.SetBuffCount(coinBuff.buffIndex, 0);
+                }
+            }*/
+            body.SetBuffCount(CoinGun.bronzeDamageBuff.buffIndex, 0);
+            body.SetBuffCount(CoinGun.silverDamageBuff.buffIndex, 0);
+            body.SetBuffCount(CoinGun.goldDamageBuff.buffIndex, 0);
+            body.SetBuffCount(CoinGun.platinumDamageBuff.buffIndex, 0);
+
+            //find which buff to use
+            BuffIndex coinDamageBuff = BuffIndex.None;
+            if(damageBoostCount <= CoinGun.maxBronze)
+            {
+                coinDamageBuff = CoinGun.bronzeDamageBuff.buffIndex;
+            }
+            else if(damageBoostCount > CoinGun.maxBronze && damageBoostCount <= CoinGun.maxSilver)
+            {
+                coinDamageBuff = CoinGun.silverDamageBuff.buffIndex;
+            }
+            else if(damageBoostCount > CoinGun.maxSilver && damageBoostCount <= CoinGun.maxGold)
+            {
+                coinDamageBuff = CoinGun.goldDamageBuff.buffIndex;
+            }
+            else if(damageBoostCount > CoinGun.maxGold )//&& damageBoostCount <= CoinGun.maxGoldChunks)
+            {
+                coinDamageBuff = CoinGun.platinumDamageBuff.buffIndex;
+            }
+            body.SetBuffCount(coinDamageBuff, damageBoostCount);
         }
 
         private void Start()
         {
             master = body.master;
-            fixedBaseChestCost = Run.instance.GetDifficultyScaledCost(GoldenGun.baseGoldChunk);
-            if(GoldenGun.lastChestBaseCost < fixedBaseChestCost)
+            fixedBaseChestCost = Run.instance.GetDifficultyScaledCost(CoinGun.baseGoldChunk);
+            damageBoostCount = 0;
+            currentMoney = 0;
+            if(CoinGun.lastChestBaseCost < fixedBaseChestCost)
             {
-                Debug.Log(GoldenGun.lastChestBaseCost + " was less than Golden Gun's detected amount: " + fixedBaseChestCost);
-                fixedBaseChestCost = GoldenGun.lastChestBaseCost;
+                Debug.Log(CoinGun.lastChestBaseCost + " was less than Coin Gun's detected amount: " + fixedBaseChestCost);
+                fixedBaseChestCost = CoinGun.lastChestBaseCost;
             }
         }
     }

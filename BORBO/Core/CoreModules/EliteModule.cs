@@ -11,12 +11,29 @@ namespace Borbo.CoreModules
 {
     public class EliteModule : CoreModule
     {
-        //public static List<BorboEliteDef> Elites = new List<BorboEliteDef>();
+        public static List<CustomEliteDef> Elites = new List<CustomEliteDef>();
         public static Texture defaultShaderRamp = Main.assetBundle.LoadAsset<Texture>(Main.assetsPath + "texRampFrenzied.tex");
 
         public override void Init()
         {
 
         }
+        #region EliteDef
+        public class CustomEliteDef : ScriptableObject
+        {
+            public EliteDef eliteDef;
+            public EliteTiers eliteTier;
+            public Color lightColor = Color.clear;
+            public Texture eliteRamp;
+            public Material overlayMaterial;
+            public GameObject spawnEffect;
+        }
+        public enum EliteTiers
+        {
+            Tier1,
+            Tier2,
+            Other
+        }
+        #endregion
     }
 }

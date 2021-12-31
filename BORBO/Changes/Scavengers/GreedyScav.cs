@@ -33,7 +33,7 @@ namespace Borbo.Scavengers
             AddItemInfo(RoR2Content.Items.Bandolier.name, 1);
             AddItemInfo(RoR2Content.Items.BonusGoldPackOnKill.name, 5);
 
-            AddItemInfo(GoldenGun.instance.ItemsDef.name, 1);
+            AddItemInfo(CoinGun.instance.ItemsDef.name, 1);
 
             //red
             AddItemInfo(RoR2Content.Items.UtilitySkillMagazine.name, 1);

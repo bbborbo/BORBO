@@ -185,7 +185,7 @@ namespace Borbo.Equipment
             Assets.eliteDefs.Add(EliteDef);
 
             #region BorboEliteDef
-            BorboEliteDef BED = ScriptableObject.CreateInstance<BorboEliteDef>();
+            CustomEliteDef BED = ScriptableObject.CreateInstance<CustomEliteDef>();
             BED.eliteDef = EliteDef;
             BED.eliteTier = EliteTier;
             BED.eliteRamp = Main.assetBundle.LoadAsset<Texture>(Main.assetsPath + EliteRampTextureName + ".png");
