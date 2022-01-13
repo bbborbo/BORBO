@@ -16,8 +16,28 @@ namespace Borbo.CoreModules
 
         public override void Init()
         {
-
+            RoR2Application.onLoad += AddElites;
         }
+
+        private static void AddElites()
+        {
+            foreach (CustomEliteDef eliteDef in Elites)
+            {
+                switch (eliteDef.eliteTier)
+                {
+                    case EliteTiers.Tier1:
+                        HG.ArrayUtils.ArrayAppend(ref CombatDirector.eliteTiers[1].eliteTypes, eliteDef.eliteDef);
+                        HG.ArrayUtils.ArrayAppend(ref CombatDirector.eliteTiers[2].eliteTypes, eliteDef.eliteDef);
+                        break;
+                    case EliteTiers.Tier2:
+                        HG.ArrayUtils.ArrayAppend(ref CombatDirector.eliteTiers[3].eliteTypes, eliteDef.eliteDef);
+                        break;
+                    case EliteTiers.Other:
+                        break;
+                }
+            }
+        }
+
         #region EliteDef
         public class CustomEliteDef : ScriptableObject
         {

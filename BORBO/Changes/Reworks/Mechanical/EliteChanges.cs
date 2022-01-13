@@ -1,4 +1,5 @@
-﻿using Mono.Cecil.Cil;
+﻿using BepInEx;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
@@ -10,7 +11,7 @@ using UnityEngine;
 
 namespace Borbo
 {
-    internal partial class Main
+    internal partial class Main : BaseUnityPlugin
     {
         public static float overloadingBombDamage = 1.5f; //0.5f
 

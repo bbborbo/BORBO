@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 1276337975
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: itempackbundle
+      Dependencies: {}
+    Info_1:
+      Name: borbobundle
+      Dependencies: {}

@@ -38,7 +38,10 @@ namespace Borbo
     internal partial class Main : BaseUnityPlugin
     {
         public static AssetBundle assetBundle = Tools.LoadAssetBundle(BORBO.Properties.Resources.borboitemicons);
+        public static AssetBundle assetBundle2 = Tools.LoadAssetBundle(BORBO.Properties.Resources.borbobundle);
         public static string assetsPath = "Assets/BorboItemIcons/";
+        public static string modelsPath = "Assets/Models/Prefabs/";
+        public static string iconsPath = "Assets/Textures/Icons/";
         public static bool isAELoaded = Tools.isLoaded("com.Borbo.ArtificerExtended");
         public static bool isDSTLoaded = Tools.isLoaded("com.Borbo.DuckSurvivorTweaks");
 

@@ -5,10 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="borbobundle" />
     <None Remove="Resources\borboitemicons" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="borbobundle" />
     <EmbeddedResource Include="Resources\borboitemicons" />
   </ItemGroup>
 

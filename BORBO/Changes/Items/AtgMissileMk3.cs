@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Borbo.Items
 {
-    class AtgMissileMk3 : ItemBase
+    class AtgMissileMk3 : ItemBase<AtgMissileMk3>
     {
         public static GameObject missilePrefab = Resources.Load<GameObject>("Prefabs/Projectiles/MissileProjectile");
         public float procCoefficient = 0.6f;
@@ -64,8 +64,6 @@ namespace Borbo.Items
 
         public override Sprite ItemIcon => Resources.Load<Sprite>("textures/itemicons/texMissileLauncherIcon");
 
-        public override string OptionalDefString { get; set; } = "BorboAtgMk3";
-
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
             return IDR;
@@ -76,7 +74,7 @@ namespace Borbo.Items
             orig();
             if (ItemBase.DefDictionary.ContainsKey("BorboAtgMk3"))
             {
-                ItemDef def;
+                ItemDef def = instance.ItemsDef;
                 DefDictionary.TryGetValue("BorboAtgMk3", out def);
 
                 if(def != null)

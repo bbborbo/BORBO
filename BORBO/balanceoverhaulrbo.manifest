@@ -1,0 +1,37 @@
+ManifestFileVersion: 0
+CRC: 129324253
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 5a90ce489abb7b31fb15af34595b365d
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 21747e4ee48f36c7a65f9afbfd77f392
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Models/Meshes/borboshield.fbx
+- Assets/Models/Prefabs/Item/CobaltShield.prefab
+- Assets/Textures/Icons/Item/texIconCobaltShield.png
+- Assets/Textures/Materials/Item/borboshield_Diffuse.png
+- Assets/Textures/Materials/Item/borboshield_Normal.png
+- Assets/Textures/Materials/Item/matCobaltShield.mat
+Dependencies: []

@@ -47,7 +47,6 @@ namespace Borbo.Items
 
         public virtual bool AIBlacklisted { get; set; } = false;
         public virtual bool IsHidden { get; } = false;
-        public virtual string OptionalDefString { get; set; } = "";
 
         public abstract void Init(ConfigFile config);
 
@@ -87,10 +86,6 @@ namespace Borbo.Items
             }
 
             ItemAPI.Add(new CustomItem(ItemsDef, itemDisplayRules));
-            if(OptionalDefString != "")
-            {
-                DefDictionary.Add(OptionalDefString, ItemsDef);
-            }
         }
 
         public abstract void Hooks();
@@ -114,6 +109,28 @@ namespace Borbo.Items
             if (!body || !body.inventory) { return 0; }
 
             return body.inventory.GetItemCount(itemIndex);
+        }
+
+        public static GameObject LoadDropPrefab(string prefabName)
+        {
+            GameObject prefab = Main.assetBundle2.LoadAsset<GameObject>($"Assets/Models/DropPrefabs/Item/{prefabName}.prefab");
+            return prefab;
+        }
+
+        public static GameObject LoadDisplayPrefab(string prefabName)
+        {
+            GameObject prefab = Main.assetBundle2.LoadAsset<GameObject>($"Assets/Models/DisplayPrefabs/Item/{prefabName}.prefab");
+            if(prefab == null)
+            {
+                prefab = LoadDisplayPrefab(prefabName);
+            }
+            return prefab;
+        }
+
+        public static Sprite LoadItemIcon(string spriteName)
+        {
+            Sprite icon = Main.assetBundle2.LoadAsset<Sprite>($"Assets/Textures/Icons/Item/{spriteName}.png");
+            return icon;
         }
     }
 }

@@ -63,6 +63,26 @@ namespace BORBO.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] balanceoverhaulrbo {
+            get {
+                object obj = ResourceManager.GetObject("balanceoverhaulrbo", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] borbobundle {
+            get {
+                object obj = ResourceManager.GetObject("borbobundle", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] borboitemicons {
             get {
                 object obj = ResourceManager.GetObject("borboitemicons", resourceCulture);

@@ -8,10 +8,11 @@ using UnityEngine;
 using Borbo.Components;
 using static R2API.RecalculateStatsAPI;
 using EntityStates;
+using BepInEx;
 
 namespace Borbo
 {
-    internal partial class Main
+    internal partial class Main : BaseUnityPlugin
     {
         public static float drizzleDifficultyBoost = 0;
         public static float rainstormDifficultyBoost = 3;

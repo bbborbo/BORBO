@@ -10,7 +10,7 @@ using static Borbo.CoreModules.StatHooks;
 
 namespace Borbo.Items
 {
-    class WickedBand : ItemBase
+    class WickedBand : ItemBase<WickedBand>
     {
         float damageCoefficientThreshold = 4f;
         float cooldownRefreshBase = 0f;
@@ -33,11 +33,9 @@ namespace Borbo.Items
 		public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Utility };
 		public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfInteraction;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("prefabs/pickupmodels/PickupSkull");
+        public override GameObject ItemModel => LoadDropPrefab("WickedBand");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("textures/miscicons/texWIPIcon");
-
-        public override string OptionalDefString { get; set; } = "BorboWickedBand";
+        public override Sprite ItemIcon => LoadItemIcon("texIconWickedBand");
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
@@ -49,8 +47,7 @@ namespace Borbo.Items
             orig();
             if (ItemBase.DefDictionary.ContainsKey("BorboWickedBand"))
             {
-                ItemDef def;
-                DefDictionary.TryGetValue("BorboWickedBand", out def);
+                ItemDef def = WickedBand.instance.ItemsDef;
 
                 if (def != null)
                 {

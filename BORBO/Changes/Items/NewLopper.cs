@@ -48,9 +48,9 @@ namespace Borbo.Items
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfDamage;
         public override HookType Type { get; set; } = HookType.CritDamage;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("prefabs/NullModel");
+        public override GameObject ItemModel => LoadDropPrefab("NewLopper");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("textures/miscicons/texWIPIcon");
+        public override Sprite ItemIcon => LoadItemIcon("texIconNewLopper");
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
