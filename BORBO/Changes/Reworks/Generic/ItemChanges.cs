@@ -338,5 +338,32 @@ namespace Borbo
             });
         }
         #endregion
+
+        #region minion on kill
+        void MakeMinionsInheritOnKillEffects()
+        {
+            On.RoR2.Inventory.GetItemCount_ItemIndex += GetItemCountInheritOnKills;
+        }
+
+        private int GetItemCountInheritOnKills(On.RoR2.Inventory.orig_GetItemCount_ItemIndex orig, Inventory self, ItemIndex itemIndex)
+        {
+            int itemCount = orig(self, itemIndex);
+            if (ItemCatalog.GetItemDef(itemIndex).ContainsTag(ItemTag.OnKillEffect) && itemCount == 0)
+            {
+                CharacterMaster master = self.GetComponent<CharacterMaster>();
+                if(master != null)
+                {
+                    MinionOwnership mo = master.minionOwnership;
+                    CharacterMaster ownerMaster = mo.ownerMaster;
+                    if (ownerMaster)
+                    {
+                        int masterItemCount = ownerMaster.inventory.GetItemCount(itemIndex);
+                        itemCount = masterItemCount;
+                    }
+                }
+            }
+            return itemCount;
+        }
+        #endregion
     }
 }

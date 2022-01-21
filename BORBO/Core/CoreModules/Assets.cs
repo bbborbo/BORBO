@@ -54,6 +54,7 @@ namespace Borbo.CoreModules
         public static List<SkillDef> skillDefs = new List<SkillDef>();
         public static List<GameObject> projectilePrefabs = new List<GameObject>();
         public static List<GameObject> networkedObjectPrefabs = new List<GameObject>();
+        public static List<Type> entityStates = new List<Type>();
 
         public static List<ItemDef> itemDefs = new List<ItemDef>();
         public static List<EquipmentDef> equipDefs = new List<EquipmentDef>();

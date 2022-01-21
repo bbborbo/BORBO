@@ -39,6 +39,7 @@ namespace Borbo.CoreModules
             contentPack.projectilePrefabs.Add(Assets.projectilePrefabs.ToArray());
             contentPack.bodyPrefabs.Add(Assets.bodyPrefabs.ToArray());
             contentPack.masterPrefabs.Add(Assets.masterPrefabs.ToArray());
+            contentPack.entityStateTypes.Add(Assets.entityStates.ToArray());
 
             //contentPack.eliteDefs.Add(Assets.eliteDefs.ToArray());
             //contentPack.unlockableDefs.Add(Unlockables.unlockableDefs.ToArray());

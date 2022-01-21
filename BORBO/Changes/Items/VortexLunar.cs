@@ -240,7 +240,7 @@ namespace Borbo.Items
             {
                 radialForce = GetComponent<RadialForce>();
             }
-            projectileSimple.lifetime = 0.3f;
+            projectileSimple.lifetime = 0.5f;
             radialForce.radius = VortexLunar.baseRadius;
         }
 

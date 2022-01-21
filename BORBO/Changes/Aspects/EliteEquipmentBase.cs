@@ -249,13 +249,14 @@ namespace Borbo.Equipment
         {
         }
 
-        internal static bool IsElite(CharacterBody body, BuffDef buffDef)
+        internal bool IsElite(CharacterBody body, BuffDef buffDef = null)
         {
-            if (body.HasBuff(buffDef))
+            if(buffDef == null)
             {
-                return true;
+                buffDef = EliteBuffDef;
             }
-            return false;
+
+            return body.HasBuff(buffDef);
         }
 
         protected bool PerformEquipmentAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, RoR2.EquipmentSlot self, EquipmentDef equipmentDef)

@@ -140,6 +140,7 @@ namespace Borbo
                 RoR2Content.Equipment.DroneBackup.cooldown = 60;
 
                 this.StunChanges();
+                this.MakeMinionsInheritOnKillEffects();
 
                 //scav could have royal cap? cunning
             }

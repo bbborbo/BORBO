@@ -13,15 +13,16 @@ using UnityEngine.Networking;
 using static Borbo.CoreModules.EliteModule;
 using static EntityStates.TeleporterHealNovaController.TeleporterHealNovaPulse;
 using static RoR2.CombatDirector;
+using Borbo.States.LeechingHealNovaController;
 
 namespace Borbo.Equipment
 {
-    class LeechingAspect : EliteEquipmentBase
+    class LeechingAspect : EliteEquipmentBase<LeechingAspect>
     {
         public static float healPulseRadius = 25.1354563f;
         public static float healFraction = 0.1f;
         public static float maxHealFraction = 2f;
-
+        public static GameObject pulsePrefab;
 
         public override string EliteEquipmentName => "N\u2019Kuhana\u2019s Respite";
 
@@ -63,35 +64,112 @@ namespace Borbo.Equipment
         public override void Hooks()
         {
             On.RoR2.GlobalEventManager.OnHitEnemy += LeechingOnHit;
-            On.EntityStates.TeleporterHealNovaController.TeleporterHealNovaPulse.OnEnter += LeechingHealingPulse;
-            //IL.EntityStates.TeleporterHealNovaController.TeleporterHealNovaPulse.HealPulse.Update += LeechingHealing;
-            //On.EntityStates.TeleporterHealNovaController.TeleporterHealNovaPulse.HealPulse.ctor += LeechingHealingShitttt;
+            //On.EntityStates.TeleporterHealNovaController.TeleporterHealNovaPulse.OnEnter += LeechingHealingPulse;
+            On.EntityStates.TeleporterHealNovaController.TeleporterHealNovaWindup.OnEnter += LeechingHealingPulseIntercept;
+            On.RoR2.CharacterBody.OnInventoryChanged += LeechingPulseRangeIndicator;
         }
 
-        private void LeechingHealingShitttt(On.EntityStates.TeleporterHealNovaController.TeleporterHealNovaPulse.HealPulse.orig_ctor orig, 
-            object self, Vector3 origin, float finalRadius, float healFractionValue, float duration, TeamIndex teamIndex)
+        private void LeechingPulseRangeIndicator(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
-            if (finalRadius == healPulseRadius)
-            {
-                healFractionValue = 0;
+            orig(self);
+            self.AddItemBehavior<AffixSerpentineBehavior>(IsElite(self) ? 1 : 0);
+        }
 
+        public override void Init(ConfigFile config)
+        {
+            /*Material mat = Resources.Load<Material>("materials/matEliteHauntedOverlay");
+            mat.color = Color.magenta;
+            EliteMaterial = mat;*/
+
+            CanAppearInEliteTiers = VanillaTier2();
+
+            CreatePulsePrefab();
+            CreateEliteEquipment();
+            CreateLang();
+            CreateElite();
+            Hooks();
+        }
+
+        private void CreatePulsePrefab()
+        {
+            pulsePrefab = Resources.Load<GameObject>("prefabs/networkedobjects/teleporterhealnovapulse").InstantiateClone("LeechingHealNovaPulse", true);
+            LeechingHealingPulseComponent LHP = pulsePrefab.AddComponent<LeechingHealingPulseComponent>();
+            Assets.entityStates.Add(typeof(LeechingHealNovaPulse));
+
+            Transform PP = pulsePrefab.transform.Find("PP");
+            if (PP == null)
+            {
+                Debug.Log("No PP found");
+                PostProcessDuration ppd = pulsePrefab.GetComponentInChildren<PostProcessDuration>();
+                if(ppd != null)
+                {
+                    PP = ppd.transform;
+                }
             }
-            orig(self, origin, finalRadius, healFractionValue, duration, teamIndex);
-        }
-
-        private void LeechingHealing(ILContext il)
-        {
-            ILCursor c = new ILCursor(il);
-
-
-            /*if((HealPulse)self.finalRadius == healPulseRadius)
+            if (PP != null)
             {
-
+                GameObject.Destroy(PP.gameObject);
             }
             else
             {
-                orig(self);
-            }*/
+            }
+        }
+
+        private void LeechingOnHit(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
+        {
+            if (damageInfo.attacker && victim && NetworkServer.active && damageInfo.procCoefficient > 0)
+            {
+                CharacterBody aBody = damageInfo.attacker.GetComponent<CharacterBody>();
+                CharacterBody vBody = victim.GetComponent<CharacterBody>();
+
+                if (aBody && vBody)
+                {
+                    if (IsElite(aBody))
+                    {
+                        CreatePulse(aBody, damageInfo);
+                    }
+                }
+            }
+
+            orig(self, damageInfo, victim);
+        }
+        protected void CreatePulse(CharacterBody body, DamageInfo damageInfo)
+        {
+            TeamIndex team = body.teamComponent.teamIndex;
+            Transform transform = damageInfo.attacker.transform;
+
+            GameObject gameObject = UnityEngine.Object.Instantiate(pulsePrefab, transform.position, transform.rotation);
+            //GameObject gameObject = UnityEngine.Object.Instantiate(TeleporterHealNovaGeneratorMain.pulsePrefab, transform.position, transform.rotation);
+            gameObject.GetComponent<TeamFilter>().teamIndex = team;
+
+            LeechingHealingPulseComponent LHP = gameObject.GetComponent<LeechingHealingPulseComponent>();
+            if(LHP == null)
+            {
+                Debug.Log("LHP null!");
+                LHP = gameObject.AddComponent<LeechingHealingPulseComponent>();
+            }
+            LHP.procCoefficient = damageInfo.procCoefficient;
+            LHP.maxHealth = body.healthComponent.fullCombinedHealth;
+            LHP.bodyRadius = body.radius;
+
+            NetworkServer.Spawn(gameObject);
+        }
+
+        private void LeechingHealingPulseIntercept(On.EntityStates.TeleporterHealNovaController.TeleporterHealNovaWindup.orig_OnEnter orig, TeleporterHealNovaWindup self)
+        {
+            orig(self);
+            LeechingHealingPulseComponent lhcp = self.gameObject.GetComponent<LeechingHealingPulseComponent>();
+            if (lhcp)
+            {
+                //EffectManager.SimpleEffect(TeleporterHealNovaWindup.chargeEffectPrefab, self.transform.position, Quaternion.identity, false);
+                if (self.isAuthority)
+                {
+                    self.outer.SetNextState(new LeechingHealNovaPulse() 
+                    { 
+                        leechingHealingPulseComponent = lhcp
+                    });
+                }
+            }
         }
 
         private void LeechingHealingPulse(On.EntityStates.TeleporterHealNovaController.TeleporterHealNovaPulse.orig_OnEnter orig, TeleporterHealNovaPulse self)
@@ -129,7 +207,7 @@ namespace Borbo.Equipment
                     if (!healedTargets.Contains(healthComponent))
                     {
                         healedTargets.Add(healthComponent);
-                        if (!IsElite(healthComponent.body, EliteBuffDef))
+                        if (!IsElite(healthComponent.body))
                         {
                             float baseHeal = healthComponent.fullHealth * healFraction;
 
@@ -140,53 +218,6 @@ namespace Borbo.Equipment
                     }
                 }
             }
-        }
-
-        private void LeechingOnHit(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
-        {
-            if(damageInfo.attacker && victim)
-            {
-                CharacterBody aBody = damageInfo.attacker.GetComponent<CharacterBody>();
-                CharacterBody vBody = victim.GetComponent<CharacterBody>();
-
-                if (aBody && vBody)
-                {
-                    if (IsElite(aBody, EliteBuffDef))
-                    {
-                        Debug.Log("Leeching Healing Pulse Here!");
-                        Pulse(aBody, damageInfo);
-                    }
-                }
-            }
-
-            orig(self, damageInfo, victim);
-        }
-        protected void Pulse(CharacterBody body, DamageInfo damageInfo)
-        {
-            TeamIndex team = body.teamComponent.teamIndex;
-            Transform transform = damageInfo.attacker.transform;
-
-            GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(TeleporterHealNovaGeneratorMain.pulsePrefab, transform);
-            gameObject.GetComponent<TeamFilter>().teamIndex = team;
-            NetworkServer.Spawn(gameObject);
-
-            LeechingHealingPulseComponent LHP = gameObject.AddComponent<LeechingHealingPulseComponent>();
-            LHP.procCoefficient = damageInfo.procCoefficient;
-            LHP.maxHealth = body.healthComponent.fullCombinedHealth;
-        }
-
-        public override void Init(ConfigFile config)
-        {
-            /*Material mat = Resources.Load<Material>("materials/matEliteHauntedOverlay");
-            mat.color = Color.magenta;
-            EliteMaterial = mat;*/
-
-            CanAppearInEliteTiers = VanillaTier2(); 
-
-            CreateEliteEquipment();
-            CreateLang();
-            CreateElite();
-            Hooks();
         }
 
         void AssignEliteTier()
@@ -206,5 +237,40 @@ namespace Borbo.Equipment
         {
             return false;
         }
+    }
+
+    public class AffixSerpentineBehavior : CharacterBody.ItemBehavior
+    {
+        private const float scaleMultiplier = 1.9f;
+        private GameObject affixLeechingWard;
+        private void FixedUpdate()
+        {
+            if (!NetworkServer.active)
+            {
+                return;
+            }
+            bool flag = this.stack > 0;
+            if (this.affixLeechingWard != flag)
+            {
+                if (flag)
+                {
+                    affixLeechingWard = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/NearbyDamageBonusIndicator"), body.transform);
+                    affixLeechingWard.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(base.gameObject);
+                    affixLeechingWard.transform.Find("Radius, Spherical").localScale = Vector3.one * (LeechingHealNovaPulse.baseRadius + body.radius) * scaleMultiplier;
+                    return;
+                }
+                UnityEngine.Object.Destroy(this.affixLeechingWard);
+                this.affixLeechingWard = null;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (this.affixLeechingWard)
+            {
+                UnityEngine.Object.Destroy(this.affixLeechingWard);
+            }
+        }
+
     }
 }

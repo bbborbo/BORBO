@@ -10,5 +10,6 @@ namespace Borbo.Components
         public float damageCoefficient;
         public float procCoefficient;
         public float maxHealth;
+        public float bodyRadius;
     }
 }

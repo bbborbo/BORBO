@@ -59,7 +59,7 @@ namespace Borbo.Equipment
 
         public override bool CanDrop { get; } = true;
 
-        public override float Cooldown { get; } = 30f;
+        public override float Cooldown { get; } = 25f;
         public override string OptionalDefString { get; set; } = "BorboGuillotine";
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
