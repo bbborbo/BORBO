@@ -12,7 +12,6 @@ namespace Borbo
         StateOfInteraction,
         StateOfDamage,
         StateOfEconomy,
-        StateOfDifficulty,
         Count
     }
 }

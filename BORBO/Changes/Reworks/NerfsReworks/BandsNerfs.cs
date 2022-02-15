@@ -27,16 +27,10 @@ namespace Borbo
             IL.RoR2.GlobalEventManager.OnHitEnemy += RunaldNerf;
             IL.RoR2.GlobalEventManager.OnHitEnemy += KjaroNerf;
 
-            string slowPart = "<style=cIsUtility>slowing</style> them by <style=cIsUtility>80%</style>";
-            if (isAELoaded)
-            {
-                slowPart = "<style=cIsUtility>Chilling</style> them";
-            }
-
             LanguageAPI.Add("ITEM_ICERING_DESC", 
                 $"Hits that deal <style=cIsDamage>more than 400% damage</style> also blasts enemies with a " +
                 $"<style=cIsDamage>runic ice blast</style>, " +
-                $"{slowPart} for <style=cIsUtility>3s</style> <style=cStack>(+3s per stack)</style> and " +
+                $"<style=cIsUtility>Chilling</style> them for <style=cIsUtility>3s</style> <style=cStack>(+3s per stack)</style> and " +
                 $"dealing <style=cIsDamage>{Tools.ConvertDecimal(runaldBaseDamage)}</style> BASE damage, " +
                 $"plus <style=cIsDamage>{runaldTotal}</style> <style=cStack>(+{runaldTotal} per stack)</style> TOTAL damage. " +
                 $"Recharges every <style=cIsUtility>10</style> seconds.");

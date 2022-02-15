@@ -1,4 +1,4 @@
-﻿using Borbo.Components;
+﻿using Borbo;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;

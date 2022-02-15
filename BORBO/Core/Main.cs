@@ -25,10 +25,14 @@ namespace Borbo
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.Skell.DeathMarkChange", BepInDependency.DependencyFlags.SoftDependency)]
+
     [BepInDependency("com.Borbo.ArtificerExtended", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Borbo.DuckSurvivorTweaks", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.Borbo.DifficultyPLUS", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.Borbo.HuntressBuffULTIMATE", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Borbo.GreenAlienHead", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("com.Borbo.ArtifactGesture", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.Borbo.ArtifactGesture", BepInDependency.DependencyFlags.SoftDependency)]
+
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     [BepInPlugin("com.Borbo.BORBO", "BORBO", "0.4.11")]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(BuffAPI), nameof(PrefabAPI), 
@@ -44,6 +48,7 @@ namespace Borbo
         public static string iconsPath = "Assets/Textures/Icons/";
         public static bool isAELoaded = Tools.isLoaded("com.Borbo.ArtificerExtended");
         public static bool isDSTLoaded = Tools.isLoaded("com.Borbo.DuckSurvivorTweaks");
+        public static bool isHBULoaded = Tools.isLoaded("com.Borbo.HuntressBuffULTIMATE");
 
         internal static ConfigFile CustomConfigFile { get; set; }
         public static ConfigEntry<bool> EnableConfig { get; set; }
@@ -56,7 +61,7 @@ namespace Borbo
         public static ConfigEntry<bool> StateOfDifficulty { get; set; }
 
         public static ConfigEntry<bool>[] DisableConfigCategories = new ConfigEntry<bool>[(int)BalanceCategory.Count] 
-        { StateOfDefenseAndHealing, StateOfHealth, StateOfInteraction, StateOfDamage, StateOfEconomy, StateOfDifficulty };
+        { StateOfDefenseAndHealing, StateOfHealth, StateOfInteraction, StateOfDamage, StateOfEconomy };
         bool IsCategoryEnabled(BalanceCategory category)
         {
             bool enabled = true;
@@ -169,7 +174,7 @@ namespace Borbo
 
                 //this.DoGreedyScavenger();
             }
-            if (IsCategoryEnabled(BalanceCategory.StateOfDifficulty))
+            /*if (IsCategoryEnabled(BalanceCategory.StateOfDifficulty))
             {
                 this.ChangeElites();
                 this.ChangeEliteBehavior();
@@ -196,7 +201,7 @@ namespace Borbo
                     $"\n>Teleporter Visuals: <style=cIsHealth>{Tools.ConvertDecimal(1 - hardTeleParticleRadius / normalTeleParticleRadius)}</style> " +
                     $"\n>{Tier2EliteName} Elites appear starting on <style=cIsHealth>Stage {Tier2EliteMinimumStageMonsoon + 1}</style>" + 
                     $"\n>Most Enemies have <style=cIsHealth>unique scaling</style></style>");
-            }
+            }*/
             //lol
             LanguageAPI.Add("ITEM_SHOCKNEARBY_PICKUP", "lol");
             LanguageAPI.Add("ITEM_AUTOCASTEQUIPMENT_PICKUP", "lol");

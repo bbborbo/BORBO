@@ -56,9 +56,6 @@ namespace Borbo.Equipment
             return etd.ToArray();
         }
 
-        public virtual BalanceCategory Category { get; set; } = BalanceCategory.None;
-        public virtual HookType Type { get; set; } = HookType.None;
-
         public abstract string EliteEquipmentName { get; }
         public abstract string EliteAffixToken { get; }
         public abstract string EliteEquipmentPickupDesc { get; }
@@ -105,6 +102,7 @@ namespace Borbo.Equipment
         /// </summary>
         public virtual Material EliteOverlayMaterial { get; set; } = null;
         public virtual string EliteRampTextureName { get; set; } = null;
+        public virtual BalanceCategory Category { get; set; } = BalanceCategory.None;
 
         public EliteDef EliteDef;
 

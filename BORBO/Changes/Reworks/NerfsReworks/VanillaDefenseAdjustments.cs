@@ -85,8 +85,8 @@ namespace Borbo
         public static float featherJumpHorizontalBonus = 1.3f; //1.5f
         public static float hoofSpeedBonusBase = 0.1f; //0.14
         public static float hoofSpeedBonusStack = 0.1f; //0.14
-        public static float drinkSpeedBonusBase = 0.40f; //0.25
-        public static float drinkSpeedBonusStack = 0.25f; //0.25
+        public static float drinkSpeedBonusBase = 0.2f; //0.25
+        public static float drinkSpeedBonusStack = 0.15f; //0.25
 
         public static float dynamicJumpAscentHoldGravity = 0.8f; //1f
         public static float dynamicJumpAscentReleaseGravity = 1.3f; //1f
@@ -99,19 +99,13 @@ namespace Borbo
                 $"Increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{Tools.ConvertDecimal(hoofSpeedBonusBase)}</style> " +
                 $"<style=cStack>(+{Tools.ConvertDecimal(hoofSpeedBonusStack)} per stack)</style>.");
 
-            if (Main.isDSTLoaded)
+            if (!Main.isHBULoaded)
             {
                 LanguageAPI.Add("ITEM_SPRINTBONUS_DESC",
                     $"<style=cIsUtility>Sprint speed</style> is improved by <style=cIsUtility>{Tools.ConvertDecimal(drinkSpeedBonusBase)}</style> " +
                     $"<style=cStack>(+{Tools.ConvertDecimal(drinkSpeedBonusStack)} per stack)</style>.");
+                IL.RoR2.CharacterBody.RecalculateStats += DrinkNerf;
             }
-            else
-            {
-                LanguageAPI.Add("ITEM_SPRINTBONUS_DESC",
-                    $"<style=cIsUtility>Sprint speed</style> is improved by <style=cIsUtility>{Tools.ConvertDecimal(drinkSpeedBonusBase / 2)}</style> " +
-                    $"<style=cStack>(+{Tools.ConvertDecimal(drinkSpeedBonusStack / 2)} per stack)</style>.");
-            }
-            IL.RoR2.CharacterBody.RecalculateStats += DrinkNerf;
 
             IL.EntityStates.GenericCharacterMain.ProcessJump += FeatherNerf;
             IL.RoR2.CharacterMotor.PreMove += DynamicJump;
@@ -232,10 +226,6 @@ namespace Borbo
                 if (itemCount > 0)
                 {
                     newSpeedBonus = drinkSpeedBonusBase + (drinkSpeedBonusStack * (itemCount - 1));
-                }
-                if (Main.isDSTLoaded)
-                {
-                    newSpeedBonus = newSpeedBonus / 2;
                 }
                 return newSpeedBonus;
             });

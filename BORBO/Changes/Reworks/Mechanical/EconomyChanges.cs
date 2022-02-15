@@ -15,27 +15,6 @@ namespace Borbo
 {
     internal partial class Main : BaseUnityPlugin
     {
-        #region State of Difficulty
-        void FixMoneyAndExpRewards()
-        {
-            On.RoR2.DeathRewards.Awake += FixMoneyAndExpRewards;
-        }
-
-        private void FixMoneyAndExpRewards(On.RoR2.DeathRewards.orig_Awake orig, RoR2.DeathRewards self)
-        {
-            orig(self);
-            float boost = GetAmbientLevelBoost();
-            float ambientLevel = Run.instance.ambientLevel;
-            float forgiveness = 0.85f;
-
-            float actualLevelStat = 1 + (0.3f * ambientLevel);
-            float intendedLevelStat = 1 + (0.3f * (ambientLevel - boost * forgiveness));
-            float rewardMult = intendedLevelStat / actualLevelStat;
-
-            self.goldReward = (uint)((float)self.expReward * rewardMult);
-            self.expReward = (uint)((float)self.expReward * rewardMult);
-        }
-        #endregion
 
         GameObject awu = Resources.Load<GameObject>("prefabs/characterbodies/SuperRoboBallBossBody");
         CharacterBody awuBody;
@@ -86,7 +65,7 @@ namespace Borbo
         #region Blood Shrines
         private static int teamMaxHealth;
         private const float totalHealthFraction = 2.18f; // health bars
-        private static float chestAmount = 2.18f * 2; // chests per health bar
+        private static float chestAmount = 2; // chests per health bar
 
         public static int lastChestBaseCost = 25;
         private void GetChestCostForStage(On.RoR2.Run.orig_BeginStage orig, Run self)
@@ -117,11 +96,11 @@ namespace Borbo
                     }
                 }
 
-                float baseCost = lastChestBaseCost;
-                float maxMoneyTotal = baseCost * chestAmount;
-                float maxMulti = maxMoneyTotal / teamMaxHealth / totalHealthFraction;
+                float baseCost = lastChestBaseCost; //cost of a small chest
+                float moneyTotal = baseCost * chestAmount; //target money granted by the shrine
+                float maxMulti = moneyTotal / teamMaxHealth; //express target money as a fraction of the max health of the team
 
-                if (maxMulti > 0.5f)
+                if (maxMulti > 0)//0.5f)
                     instance.goldToPaidHpRatio = maxMulti;
             }
         }

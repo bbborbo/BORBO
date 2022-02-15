@@ -35,13 +35,22 @@ namespace Borbo.Items
             $"<style=cStack>(+{Tools.ConvertDecimal(bonusCritDamageLowHealthStack)} per stack)</style>, and " +
             $"<style=cIsDamage>critical strike chance by another {dangerCritChance - freeCritChance}%</style>.";
 
-        public override string ItemLore => "Order: The New Lopper" +
-            "\nTracking Number: 598********" +
-            "\nEstimated Delivery: 2/16/2071" +
-            "\nShipping Method: High Priority/Fragile" +
-            "\nShipping Address: Box 11, Sues Drive, Jupiter" +
-            "\nShipping Details:\n" +
-            "\nNothing here. Try again later.";
+        public override string ItemLore =>
+@"Name: [REDACTED]
+Date of birth: June 21st, 1961
+Occupation: Executioner
+
+Time of death: August 23rd, 2058
+Location of death: [REDACTED], Mercury
+Cause of death: Severe blood loss due to bodily mutilation
+
+Notes:
+An axe in pristine condition was found next to the body. Examination determined the weapon to be highly resistant to both wear and stains, particularly of blood. The axe’s construction is consistent with a smith on Sues Drive, Jupiter, that [REDACTED] was in contact with shortly before his death. 
+
+[REDACTED] committed 126 known homicides in the hour preceding his death. Every victim was killed by decapitation and had no other wounds. Witnesses report [REDACTED] accidentally struck himself and bisected his body at the waist, bleeding to death moments later. 
+
+Autopsy reveals degradation of internal organs predating [REDACTED]’s death. Symptoms appear to be consistent with certain strains of [REDACTED] found on Jupiter. No degradation was found in the brain, however it is possible that the illness influenced his mental state.
+";
 
         public override ItemTier Tier => ItemTier.Tier3;
         public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Damage };
