@@ -93,7 +93,7 @@ namespace Borbo
             AddItemInfo(ref itemInfos, RoR2Content.Items.Bandolier.name, 1);
             AddItemInfo(ref itemInfos, RoR2Content.Items.BonusGoldPackOnKill.name, 5);
 
-            AddItemInfo(ref itemInfos, CoinGun.instance.ItemsDef.name, 1);
+            //AddItemInfo(ref itemInfos, CoinGun.instance.ItemsDef.name, 1);
 
             //red
             AddItemInfo(ref itemInfos, RoR2Content.Items.UtilitySkillMagazine.name, 1);

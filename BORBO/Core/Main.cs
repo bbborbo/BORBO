@@ -61,7 +61,7 @@ namespace Borbo
         public static ConfigEntry<bool> StateOfDifficulty { get; set; }
 
         public static ConfigEntry<bool>[] DisableConfigCategories = new ConfigEntry<bool>[(int)BalanceCategory.Count] 
-        { StateOfDefenseAndHealing, StateOfHealth, StateOfInteraction, StateOfDamage, StateOfEconomy };
+        { StateOfDefenseAndHealing, StateOfHealth, StateOfInteraction, StateOfDamage };
         bool IsCategoryEnabled(BalanceCategory category)
         {
             bool enabled = true;
@@ -132,7 +132,6 @@ namespace Borbo
                 this.NerfResDisc();
                 EntityStates.LaserTurbine.FireMainBeamState.mainBeamProcCoefficient = 0.5f;
                 this.FixVagrantNova();
-                this.BossesDropBossItems();
 
                 this.ReworkPlanula();
                 this.ReworkShatterspleen();
@@ -163,16 +162,6 @@ namespace Borbo
                 this.StickyRework();
 
                 //this.DoSadistScavenger();
-            }
-            if (IsCategoryEnabled(BalanceCategory.StateOfEconomy))
-            {
-                // golden gun
-
-                this.PrinterAndScrapperOccurenceChanges();
-                this.FixMoneyScaling();
-                this.NerfBazaarStuff();
-
-                //this.DoGreedyScavenger();
             }
             /*if (IsCategoryEnabled(BalanceCategory.StateOfDifficulty))
             {
