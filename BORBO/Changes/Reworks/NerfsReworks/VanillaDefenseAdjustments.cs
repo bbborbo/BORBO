@@ -17,10 +17,10 @@ namespace Borbo
 {
     internal partial class Main : BaseUnityPlugin
     {
-        #region defense
-        public static float bucklerFreeArmor = 10;
-        public static float rapFreeArmor = 2;
-        public static float knurlFreeArmor = 15;
+        #region defensepublic static float bucklerFreeArmor = 10;
+        public static int rapFreeArmor = 2;
+        public static int knurlFreeArmor = 15;
+        public static int bucklerFreeArmor = 10;
 
         void AdjustVanillaDefense()
         {
@@ -39,13 +39,6 @@ namespace Borbo
                 $"Reduce all <style=cIsDamage>incoming damage</style> by " +
                 $"<style=cIsDamage>5<style=cStack> (+5 per stack)</style></style>. Cannot be reduced below <style=cIsDamage>1</style>. " +
                 $"Gain another <style=cIsHealing>{rapFreeArmor} armor<style=cStack>(+{rapFreeArmor} per stack)</style>.");
-
-            IL.RoR2.HealthComponent.TakeDamage += TeddyChanges;
-            LanguageAPI.Add("ITEM_BEAR_DESC",
-                $"<style=cIsHealing>{15 * teddyNewMaxValue}%</style> " +
-                $"<style=cStack>(+{15 * teddyNewMaxValue}% per stack)</style> " +
-                $"chance to <style=cIsHealing>block</style> incoming damage. " +
-                $"<style=cIsUtility>Unaffected by luck</style>.");
         }
         private void FreeBonusArmor(CharacterBody sender, StatHookEventArgs args)
         {
@@ -57,11 +50,28 @@ namespace Borbo
                 freeArmor += inv.GetItemCount(RoR2Content.Items.ArmorPlate) * rapFreeArmor;
                 freeArmor += inv.GetItemCount(RoR2Content.Items.SprintArmor) * bucklerFreeArmor;
                 freeArmor += inv.GetItemCount(RoR2Content.Items.Knurl) * knurlFreeArmor;
-
-                args.baseHealthAdd -= inv.GetItemCount(RoR2Content.Items.FlatHealth) * 25;
             }
 
             args.armorAdd += freeArmor;
+        }
+
+        private void TeddyChanges()
+        {
+            IL.RoR2.HealthComponent.TakeDamage += TeddyChanges;
+            LanguageAPI.Add("ITEM_BEAR_DESC",
+                $"<style=cIsHealing>{15 * teddyNewMaxValue}%</style> " +
+                $"<style=cStack>(+{15 * teddyNewMaxValue}% per stack)</style> " +
+                $"chance to <style=cIsHealing>block</style> incoming damage. " +
+                $"<style=cIsUtility>Unaffected by luck</style>.");
+        }
+
+        private void MeatReduceHealth(CharacterBody sender, StatHookEventArgs args)
+        {
+            Inventory inv = sender.inventory;
+            if (inv != null)
+            {
+                args.baseHealthAdd -= inv.GetItemCount(RoR2Content.Items.FlatHealth) * 25;
+            }
         }
 
         public static float teddyNewMaxValue = 0.6f; //1.0
@@ -81,36 +91,48 @@ namespace Borbo
         #endregion
 
         #region mobility
-        public static float featherJumpVerticalBonus = 1.0f; //1.5f
-        public static float featherJumpHorizontalBonus = 1.3f; //1.5f
+
+
         public static float hoofSpeedBonusBase = 0.1f; //0.14
         public static float hoofSpeedBonusStack = 0.1f; //0.14
-        public static float drinkSpeedBonusBase = 0.2f; //0.25
-        public static float drinkSpeedBonusStack = 0.15f; //0.25
-
-        public static float dynamicJumpAscentHoldGravity = 0.8f; //1f
-        public static float dynamicJumpAscentReleaseGravity = 1.3f; //1f
-        public static float dynamicJumpDescentGravity = 1f; //1f
-
-        void AdjustVanillaMobility()
+        private void GoatHoofNerf()
         {
             IL.RoR2.CharacterBody.RecalculateStats += HoofNerf;
             LanguageAPI.Add("ITEM_HOOF_DESC",
                 $"Increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{Tools.ConvertDecimal(hoofSpeedBonusBase)}</style> " +
                 $"<style=cStack>(+{Tools.ConvertDecimal(hoofSpeedBonusStack)} per stack)</style>.");
+        }
+        private void HoofNerf(ILContext il)
+        {
+            ILCursor c = new ILCursor(il);
 
-            if (!Main.isHBULoaded)
+            int countLoc = -1;
+            c.GotoNext(MoveType.After,
+                x => x.MatchLdsfld("RoR2.RoR2Content/Items", "Hoof"),
+                x => x.MatchCallOrCallvirt<RoR2.Inventory>(nameof(RoR2.Inventory.GetItemCount)),
+                x => x.MatchStloc(out countLoc)
+                );
+
+            c.GotoNext(MoveType.After,
+                x => x.MatchLdloc(countLoc),
+                x => x.MatchConvR4(),
+                x => x.MatchLdcR4(out _)
+                );
+            c.EmitDelegate<Func<float, float, float>>((itemCount, speedBonus) =>
             {
-                LanguageAPI.Add("ITEM_SPRINTBONUS_DESC",
-                    $"<style=cIsUtility>Sprint speed</style> is improved by <style=cIsUtility>{Tools.ConvertDecimal(drinkSpeedBonusBase)}</style> " +
-                    $"<style=cStack>(+{Tools.ConvertDecimal(drinkSpeedBonusStack)} per stack)</style>.");
-                IL.RoR2.CharacterBody.RecalculateStats += DrinkNerf;
-            }
-
-            IL.EntityStates.GenericCharacterMain.ProcessJump += FeatherNerf;
-            IL.RoR2.CharacterMotor.PreMove += DynamicJump;
+                float newSpeedBonus = 0;
+                if (itemCount > 0)
+                {
+                    newSpeedBonus = hoofSpeedBonusBase + (hoofSpeedBonusStack * (itemCount - 1));
+                }
+                return newSpeedBonus;
+            });
+            c.Remove();
         }
 
+        public static float dynamicJumpAscentHoldGravity = 0.8f; //1f
+        public static float dynamicJumpAscentReleaseGravity = 1.3f; //1f
+        public static float dynamicJumpDescentGravity = 1f; //1f
         private void DynamicJump(ILContext il)
         {
             ILCursor c = new ILCursor(il);
@@ -148,6 +170,8 @@ namespace Borbo
             });
         }
 
+        public static float featherJumpVerticalBonus = 1.0f; //1.5f
+        public static float featherJumpHorizontalBonus = 1.3f; //1.5f
         private void FeatherNerf(ILContext il)
         {
             ILCursor c = new ILCursor(il);
@@ -176,34 +200,19 @@ namespace Borbo
             c.Emit(OpCodes.Ldc_R4, featherJumpVerticalBonus);
         }
 
-        private void HoofNerf(ILContext il)
+
+        public static float drinkSpeedBonusBase = 0.2f; //0.25
+        public static float drinkSpeedBonusStack = 0.15f; //0.25
+        private void EnergyDrinkNerf()
         {
-            ILCursor c = new ILCursor(il);
-
-            int countLoc = -1;
-            c.GotoNext(MoveType.After,
-                x => x.MatchLdsfld("RoR2.RoR2Content/Items", "Hoof"),
-                x => x.MatchCallOrCallvirt<RoR2.Inventory>(nameof(RoR2.Inventory.GetItemCount)),
-                x => x.MatchStloc(out countLoc)
-                );
-
-            c.GotoNext(MoveType.After,
-                x => x.MatchLdloc(countLoc),
-                x => x.MatchConvR4(),
-                x => x.MatchLdcR4(out _)
-                );
-            c.EmitDelegate<Func<float, float, float>>((itemCount, speedBonus) =>
+            if (!Main.isHBULoaded)
             {
-                float newSpeedBonus = 0;
-                if(itemCount > 0)
-                {
-                    newSpeedBonus = hoofSpeedBonusBase + (hoofSpeedBonusStack * (itemCount - 1));
-                }
-                return newSpeedBonus;
-            });
-            c.Remove();
+                LanguageAPI.Add("ITEM_SPRINTBONUS_DESC",
+                    $"<style=cIsUtility>Sprint speed</style> is improved by <style=cIsUtility>{Tools.ConvertDecimal(drinkSpeedBonusBase)}</style> " +
+                    $"<style=cStack>(+{Tools.ConvertDecimal(drinkSpeedBonusStack)} per stack)</style>.");
+                IL.RoR2.CharacterBody.RecalculateStats += DrinkNerf;
+            }
         }
-
         private void DrinkNerf(ILContext il)
         {
             ILCursor c = new ILCursor(il);
@@ -243,30 +252,38 @@ namespace Borbo
         public static float medkitFlatHeal = 25;
         public static float medkitPercentHeal = 0.08f;
 
-        void AdjustVanillaHealing()
+        private void MeatBuff()
         {
+            On.RoR2.GlobalEventManager.OnCharacterDeath += MeatRegen;
+            LanguageAPI.Add("ITEM_FLATHEALTH_PICKUP", "Regenerate health after killing an enemy.");
+            LanguageAPI.Add("ITEM_FLATHEALTH_DESC", "Increases <style=cIsHealing>base health regeneration</style> by <style=cIsHealing>+2 hp/s</style> " +
+                "for <style=cIsUtility>3s</style> <style=cStack>(+3s per stack)</style> after killing an enemy.");
+        }
 
-            IL.RoR2.GlobalEventManager.OnCharacterDeath += MonsterToothHealChange;
-            LanguageAPI.Add("ITEM_TOOTH_DESC",
-            $"Killing an enemy spawns a <style=cIsHealing>healing orb</style> that heals for " +
-            $"<style=cIsHealing>{Tools.ConvertDecimal(monsterToothPercentHeal)}</style> of <style=cIsHealing>maximum health</style> " +
-            $"plus an additional <style=cIsHealing>{0} health</style> <style=cStack>(+{monsterToothFlatHeal} FLAT per stack)</style>.");
+        private void ScytheNerf()
+        {
+            IL.RoR2.GlobalEventManager.OnCrit += ScytheNerf;
+            LanguageAPI.Add("ITEM_HEALONCRIT_DESC",
+                $"Gain <style=cIsDamage>5% critical chance</style>. <style=cIsDamage>Critical strikes</style> <style=cIsHealing>heal</style> for " +
+                $"<style=cIsHealing>{scytheBaseHeal + scytheStackHeal}</style> <style=cStack>(+{scytheStackHeal} per stack)</style> <style=cIsHealing>health</style>.");
+        }
 
+        private void MedkitNerf()
+        {
             IL.RoR2.CharacterBody.RemoveBuff_BuffIndex += MedkitHealChange;
             LanguageAPI.Add("ITEM_MEDKIT_DESC",
                 $"2 seconds after getting hurt, <style=cIsHealing>heal</style> for " +
                 $"<style=cIsHealing>{Tools.ConvertDecimal(medkitPercentHeal)}</style> of <style=cIsHealing>maximum health</style> " +
                 $"plus an additional <style=cIsHealing>{0} health</style> <style=cStack>(+{medkitFlatHeal} FLAT per stack)</style>.");
+        }
 
-            IL.RoR2.GlobalEventManager.OnCrit += ScytheNerf;
-            LanguageAPI.Add("ITEM_HEALONCRIT_DESC",
-                $"Gain <style=cIsDamage>5% critical chance</style>. <style=cIsDamage>Critical strikes</style> <style=cIsHealing>heal</style> for " +
-                $"<style=cIsHealing>{scytheBaseHeal + scytheStackHeal}</style> <style=cStack>(+{scytheStackHeal} per stack)</style> <style=cIsHealing>health</style>.");
-
-            On.RoR2.GlobalEventManager.OnCharacterDeath += MeatRegen;
-            LanguageAPI.Add("ITEM_FLATHEALTH_PICKUP", "Regenerate health after killing an enemy.");
-            LanguageAPI.Add("ITEM_FLATHEALTH_DESC", "Increases <style=cIsHealing>base health regeneration</style> by <style=cIsHealing>+2 hp/s</style> " +
-                "for <style=cIsUtility>3s</style> <style=cStack>(+3s per stack)</style> after killing an enemy.");
+        private void MonsterToothNerf()
+        {
+            IL.RoR2.GlobalEventManager.OnCharacterDeath += MonsterToothHealChange;
+            LanguageAPI.Add("ITEM_TOOTH_DESC",
+            $"Killing an enemy spawns a <style=cIsHealing>healing orb</style> that heals for " +
+            $"<style=cIsHealing>{Tools.ConvertDecimal(monsterToothPercentHeal)}</style> of <style=cIsHealing>maximum health</style> " +
+            $"plus an additional <style=cIsHealing>{0} health</style> <style=cStack>(+{monsterToothFlatHeal} FLAT per stack)</style>.");
         }
 
         private void MonsterToothHealChange(ILContext il)

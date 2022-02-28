@@ -15,6 +15,7 @@ Healing:
 
 Mobility:
 - Goat Hoof speed bonus reduced from 14% to 10%
+- (If HuntressBuffUltimate is NOT loaded) Energy Drink speed bonus reduced to 20% (+12.5% per stack)
 - Hopoo Feather vertical jump bonus reduced from 50% to 0%
 - Hopoo Feather horizontal jump bonus reduced from 50% to 30%
 
@@ -73,8 +74,6 @@ Added Scavenger: Baba the Enlightened
 - Grants 2 armor unconditionally; configurable
 
 (Energy Drink packet)
-- (If DuckSurvivorTweaks is loaded) Increased speed bonus to 40% (+25% per stack)
-- (If DuckSurvivorTweaks is NOT loaded) Reduced speed bonus to 20% (+12.5% per stack)
 ```
 
 # State of Health
@@ -105,7 +104,9 @@ Added Scavenger: Bobo the Unbreakable
 
 ### ESSENTIAL CHANGES...
 ```
-None!
+Misc:
+- Chill Slow now also reduces attack speed of those afflicted by 60%
+- Reduced Lunar Chimera Wisp base attack speed to 70%
 ```
 
 ### FEATURES & CONTENT...
@@ -192,6 +193,7 @@ Added Scavenger: Chipchip the Wicked
 
 (Molten Perforator packet)
 - Reduced proc coefficient from 0.7 to 0
+- Now creates pools of napalm on detonation instead of burning directly
 
 (Charged Perforator packet)
 - Reduced proc coefficient from 1.0 to 0
@@ -231,92 +233,3 @@ Added Scavenger: Chipchip the Wicked
 (Warcry packet)
 - Warcry now grants +100% damage and +50% attack speed instead of +100% attack speed
 ```
-
-# State of Difficulty
-
-### ESSENTIAL CHANGES...
-```
-- Reduced the rate at which the Difficulty Coefficient scales over stages from 115% to 110%
-- Increased the rate at which the Difficulty Coefficient scales over time from 100% to 120%
-- The Difficulty Slider starts at a higher level depending on the difficulty setting. No longer are the days where every difficulty starts just as easy as the others.
-- Tier 2 elites spawn earlier depending on the difficulty setting. Stage 1 in eclipse, stage 4 in monsoon, stage 6 in rainstorm (the default), and stage 11 in drizzle.
-```
-
-### FEATURES & CONTENT...
-```
-Added T1 Elites: Frenzied, Volatile
-Added T2 Elite: Serpentine
-```
-
-### OTHER...
-```
-(Monsoon Stat Boost packet)
-- Monsoon Only: All monsters gain unique scaling stat bonuses.
-
-(Teleporter packet)
-- The radius of the teleporter's particles is smaller depending on the difficulty setting. 
-- 125% in drizzle, 100% in rainstorm, 50% in monsoon, and no particles in eclipse; configurable.
-
-(Elite Stat packet)
-- Reduced the health boost of base Tier 1 elites from 4x to 3x
-- Reduced the health boost of Tier 2 elites from 18x to 9x
-- Reduced the damage boost of base Tier 1 elites from 2x to 1.5x
-- Reduced the damage boost of Tier 2 elites from 6x to 4.5x
-
-(Overload packet)
-- Overloading bombs no longer stick to targets
-- Increased overloading bomb blast radius from 6m to 9m
-- Reduced overloading bomb lifetime from 1.5s to 1.2s
-- Overloading elites now deal far less knockback to players
-- Increased the damage of overloading bombs from 50% total to 150% total
-```
-
-# State of Economy
-
-### ESSENTIAL CHANGES...
-```
-- Increased scaling of interactable prices from 1.25 to 1.6
-- Legendary Chests now have a cost multiplier of 10x instead of 16x
-- Big Drones now have a cost multiplier of 8x instead of 14x
-- AWU now has adaptive armor to help match chest cost scaling
-- Monsters spawned by the teleporter event drop even less gold. Spend more time in combat!
-
-Boss Items:
-- All bosses now have a chance to drop their boss items on death
-- Boss items no longer drop from the teleporter (Someone remind me to look into replacing this feature at a later date)
-* This can be configured for Aurelionite *
-
-Misc:
-- Chill Slow now also reduces attack speed of those afflicted by 60%
-- Reduced Lunar Chimera Wisp base attack speed to 70%
-```
-
-### FEATURES & CONTENT...
-```
-Added Item: Golden Gun
-Added Scavenger: Gibgib the Greedy
-```
-
-### OTHER...
-```
-(Boss Printers packet)
-- Removed Overgrown Printers entirely
-
-(Printer packet)
-- Printers now only spawn on stages 2, 4, and 5
-- Increased Green printer spawn rate
-- Increased Red printer spawn rate (ESPECIALLY on stage 5)
-
-(Scrapper packet)
-- Scrappers now only spawn on stages 1 and 3
-- Increased Scrapper spawn rate
-
-(Newt packet)
-- Every newt altar now only has a 30% chance to spawn, including ones which were previously guaranteed to spawn
-
-(Blood packet)
-- Blood shrines now grant 2 chests worth of gold per health bar sacrificed
-```
-
-
-

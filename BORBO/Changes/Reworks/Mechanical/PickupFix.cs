@@ -19,13 +19,16 @@ namespace Borbo
         public void FixPickupStats()
         {
             BuffPickupRange(healPack);
-            healPack.GetComponent<DestroyOnTimer>().duration = toothDuration;
-            healPack.GetComponent<BeginRapidlyActivatingAndDeactivating>().delayBeforeBeginningBlinking = (toothDuration - 2f);
-
             BuffPickupRange(ammoPack);
             BuffPickupRange(moneyPack);
 
             On.RoR2.GravitatePickup.OnTriggerEnter += ChangeGravitateTargetBehavior;
+        }
+
+        private void MonsterToothDurationBuff()
+        {
+            healPack.GetComponent<DestroyOnTimer>().duration = toothDuration;
+            healPack.GetComponent<BeginRapidlyActivatingAndDeactivating>().delayBeforeBeginningBlinking = (toothDuration - 2f);
         }
 
         private void ChangeGravitateTargetBehavior(On.RoR2.GravitatePickup.orig_OnTriggerEnter orig, GravitatePickup self, Collider other)

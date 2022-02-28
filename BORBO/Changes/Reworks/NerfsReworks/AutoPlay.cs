@@ -60,55 +60,52 @@ namespace Borbo
 				$"while sprinting. Fire rate increases with <style=cIsUtility>movement speed</style>.");
 		}
 
-		private void BlanketNerfProcCoefficient()
+        private void WillowispNerfs()
         {
-			//general autoplay
-			this.meatballProjectilePrefab.GetComponent<ProjectileImpactExplosion>().blastProcCoefficient = 0f; //0.7
-			this.spleenPrefab.GetComponent<RoR2.DelayBlast>().procCoefficient = 0f;
-			this.fireworkProjectilePrefab.GetComponent<ProjectileController>().procCoefficient = 0; //0.33f
+            this.willowispPrefab.GetComponent<RoR2.DelayBlast>().procCoefficient = 0f;
+            IL.RoR2.GlobalEventManager.OnCharacterDeath += WillOWispChanges;
+            LanguageAPI.Add("ITEM_EXPLODEONDEATH_DESC",
+                $"On killing an enemy, spawn a <style=cIsDamage>lava pillar</style> in a <style=cIsDamage>{willowispBaseRange}m</style> radius for " +
+                $"<style=cIsDamage>{Tools.ConvertDecimal(willowispBaseDamage)}</style> <style=cStack>(+{Tools.ConvertDecimal(willowispBaseDamage * willowispScaleFraction)} per stack)</style> base damage.");
+        }
 
-			//general orbs
-			On.RoR2.Orbs.DevilOrb.Begin += NerfDevilOrb;
-			On.RoR2.Orbs.LightningOrb.Begin += NerfLightningOrb;
-			On.RoR2.Orbs.SimpleLightningStrikeOrb.Begin += NerfChargedPerforatorOrb;
+        private void CeremonialDaggerNerfs()
+        {
+            this.daggerPrefab.GetComponent<ProjectileController>().procCoefficient = 0f;
+            this.daggerPrefab.GetComponent<ProjectileSimple>().lifetime = 3;
+        }
 
-			//razorwire
-			IL.RoR2.HealthComponent.TakeDamage += RazorwireNerf;
-			LanguageAPI.Add("ITEM_THORNS_DESC",
-				$"Getting hit causes you to explode in a burst of razors, " +
-				$"dealing <style=cIsDamage>{Tools.ConvertDecimal(razorwireDamage)} damage</style>. " +
-				$"Hits up to <style=cIsDamage>5</style> <style=cStack>(+2 per stack)</style> targets " +
-				$"in a <style=cIsDamage>25m</style> <style=cStack>(+10m per stack)</style> radius");
+        private void GasolineChanges()
+        {
+            IL.RoR2.GlobalEventManager.ProcIgniteOnKill += GasChanges;
+            LanguageAPI.Add("ITEM_IGNITEONKILL_DESC",
+                $"Killing an enemy <style=cIsDamage>ignites</style> all enemies within " +
+                $"<style=cIsDamage>12m</style> <style=cStack>(+4m per stack)</style> " +
+                $"for <style=cIsDamage>{Tools.ConvertDecimal(gasBaseDamage)}</style> base damage. " +
+                $"Additionally, enemies <style=cIsDamage>burn</style> " +
+                $"for <style=cIsDamage>{50 * (gasBaseBurnDuration + gasStackBurnDuration)}%</style> " +
+                $"<style=cStack>(+{50 * (gasStackBurnDuration)}% per stack)</style> base damage.");
+        }
 
-			//resonance disc
-			this.resdiscProjectilePrefab.GetComponent<ProjectileController>().procCoefficient = 0; //0.5f
-			this.resdiscProjectilePrefab.GetComponent<ProjectileImpactExplosion>().blastProcCoefficient = 0; //0.5f
-			EntityStates.LaserTurbine.FireMainBeamState.mainBeamProcCoefficient = 0;
+        private void ResonanceDiscNerfs()
+        {
+            this.resdiscProjectilePrefab.GetComponent<ProjectileController>().procCoefficient = 0; //0.5f
+            this.resdiscProjectilePrefab.GetComponent<ProjectileImpactExplosion>().blastProcCoefficient = 0; //0.5f
+            EntityStates.LaserTurbine.FireMainBeamState.mainBeamProcCoefficient = 0;
+        }
 
-			//ceremonial dagger
-			this.daggerPrefab.GetComponent<ProjectileController>().procCoefficient = 0f;
-			this.daggerPrefab.GetComponent<ProjectileSimple>().lifetime = 3;
-			
-			//willowisp
-			this.willowispPrefab.GetComponent<RoR2.DelayBlast>().procCoefficient = 0f;
-			IL.RoR2.GlobalEventManager.OnCharacterDeath += WillOWispChanges;
-			LanguageAPI.Add("ITEM_EXPLODEONDEATH_DESC",
-				$"On killing an enemy, spawn a <style=cIsDamage>lava pillar</style> in a <style=cIsDamage>{willowispBaseRange}m</style> radius for " +
-				$"<style=cIsDamage>{Tools.ConvertDecimal(willowispBaseDamage)}</style> <style=cStack>(+{Tools.ConvertDecimal(willowispBaseDamage * willowispScaleFraction)} per stack)</style> base damage.");
+        private void RazorwireReworks()
+        {
+            IL.RoR2.HealthComponent.TakeDamage += RazorwireNerf;
+            LanguageAPI.Add("ITEM_THORNS_DESC",
+                $"Getting hit causes you to explode in a burst of razors, " +
+                $"dealing <style=cIsDamage>{Tools.ConvertDecimal(razorwireDamage)} damage</style>. " +
+                $"Hits up to <style=cIsDamage>5</style> <style=cStack>(+2 per stack)</style> targets " +
+                $"in a <style=cIsDamage>25m</style> <style=cStack>(+10m per stack)</style> radius");
+        }
 
-			//gasoline
-			IL.RoR2.GlobalEventManager.ProcIgniteOnKill += GasChanges;
-			LanguageAPI.Add("ITEM_IGNITEONKILL_DESC",
-				$"Killing an enemy <style=cIsDamage>ignites</style> all enemies within " +
-				$"<style=cIsDamage>12m</style> <style=cStack>(+4m per stack)</style> " +
-				$"for <style=cIsDamage>{Tools.ConvertDecimal(gasBaseDamage)}</style> base damage. " +
-				$"Additionally, enemies <style=cIsDamage>burn</style> " +
-				$"for <style=cIsDamage>{50 * (gasBaseBurnDuration + gasStackBurnDuration)}%</style> " +
-				$"<style=cStack>(+{50 * (gasStackBurnDuration)}% per stack)</style> base damage.");
-		}
-
-		#region nkuhana
-		float nkuhanaNewDamageMultiplier = 3.5f; //2.5
+        #region nkuhana
+        float nkuhanaNewDamageMultiplier = 3.5f; //2.5
 		void BuffNkuhana()
 		{
 			IL.RoR2.HealthComponent.ServerFixedUpdate += NkuhanasBuff;
@@ -326,6 +323,8 @@ namespace Borbo
 			});
 		}
 
+		float discipleDevilorbProc = 1;
+		float opinionDevilorbProc = 1;
 		private void NerfDevilOrb(On.RoR2.Orbs.DevilOrb.orig_Begin orig, DevilOrb self)
 		{
 			switch (self.effectType)
@@ -339,7 +338,7 @@ namespace Borbo
 			}
 			orig(self);
 		}
-		private void NerfLightningOrb(On.RoR2.Orbs.LightningOrb.orig_Begin orig, LightningOrb self)
+		private void NerfRazorwireOrb(On.RoR2.Orbs.LightningOrb.orig_Begin orig, LightningOrb self)
 		{
             switch (self.lightningType)
             {

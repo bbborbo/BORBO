@@ -15,30 +15,26 @@ namespace Borbo
     internal partial class Main : BaseUnityPlugin
     {
         #region buffs
-        float elephantBuffDuration = 10;
-        int elephantArmor = 200;
 
-        float critHudDamageMul = 1;
 
         float deathMarkBonusDamage = 0.3f;
 
+        private void FreshMeatStackingFix()
+        {
+            RoR2Content.Buffs.MeatRegenBoost.canStack = true;
+            GetStatCoefficients += LetMeatActuallyStack;
+        }
 
-        void FixBuffs1()
+        float elephantBuffDuration = 10;
+        int elephantArmor = 200;
+        private void JadeElephantChanges()
         {
             RoR2Content.Buffs.ElephantArmorBoost.canStack = true;
-            RoR2Content.Buffs.MedkitHeal.isDebuff = true;
-            RoR2Content.Buffs.MeatRegenBoost.canStack = true;
-
-            //elephant, specifically
             On.RoR2.EquipmentSlot.FireGainArmor += ChangeElephantDuration;
             GetStatCoefficients += ReduceElephantArmor;
             LanguageAPI.Add("EQUIPMENT_GAINARMOR_PICKUP", "Gain massive armor for 10 seconds.");
             LanguageAPI.Add("EQUIPMENT_GAINARMOR_DESC",
                 "Gain <style=cIsDamage>200 armor</style> for <style=cIsUtility>10 seconds.</style>");
-
-            //meat, specifically
-            GetStatCoefficients += LetMeatActuallyStack;
-            // meat language changes and mechanical fixes are in VanillaDefenseAdjustments
         }
 
         private void ReduceElephantArmor(CharacterBody sender, StatHookEventArgs args)
@@ -104,16 +100,9 @@ namespace Borbo
         #endregion
 
         #region damage
-        void FixBuffs2()
-        {
-            //hud, specifically
-            BorboStatCoefficients += this.HudCritDamage;
-            LanguageAPI.Add("EQUIPMENT_CRITONUSE_PICKUP", "Increased 'Critical Strike' damage. Gain 100% Critical Strike Chance for 8 seconds.");
-            LanguageAPI.Add("EQUIPMENT_CRITONUSE_DESC",
-                "<style=cIsHealth>Passively double Critical Strike Damage</style>. " +
-                "On use, gain <style=cIsDamage>+100% Critical Strike Chance</style> for 8 seconds.");
 
-            //death mark, specifically
+        private void DeathMarkFix()
+        {
             if (!Tools.isLoaded("com.Skell.DeathMarkChange"))
             {
                 RoR2Content.Buffs.DeathMark.canStack = true;
@@ -124,6 +113,16 @@ namespace Borbo
                     "increasing damage taken by <style=cIsDamage>30%</style> <style=cStack>(+30% per stack)</style> " +
                     "from all sources for <style=cIsUtility>7</style> seconds.");
             }
+        }
+
+        float critHudDamageMul = 1;
+        private void OcularHudBuff()
+        {
+            BorboStatCoefficients += HudCritDamage;
+            LanguageAPI.Add("EQUIPMENT_CRITONUSE_PICKUP", "Increased 'Critical Strike' damage. Gain 100% Critical Strike Chance for 8 seconds.");
+            LanguageAPI.Add("EQUIPMENT_CRITONUSE_DESC",
+                "<style=cIsHealth>Passively double Critical Strike Damage</style>. " +
+                "On use, gain <style=cIsDamage>+100% Critical Strike Chance</style> for 8 seconds.");
         }
 
         private void DeathMarkFix_Stacking(ILContext il)

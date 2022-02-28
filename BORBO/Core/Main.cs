@@ -15,6 +15,9 @@ using Borbo.CoreModules;
 using Borbo.Equipment;
 using Borbo.Items;
 using Borbo.Scavengers;
+using static R2API.RecalculateStatsAPI;
+using RoR2.Projectile;
+using ThreeEyedGames;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -98,99 +101,325 @@ namespace Borbo
 
             IL.RoR2.Orbs.DevilOrb.OnArrival += BuffDevilOrb;
 
-            if (IsCategoryEnabled(BalanceCategory.StateOfDefenseAndHealing))
+            BalanceCategory currentCategory = BalanceCategory.StateOfDefenseAndHealing;
+            if (IsCategoryEnabled(currentCategory))
             {
-                // ninja gear
+                // CONTENT...
+                // ITEMS:
+                // EQUIPMENT: ninja gear
+                // ENEMIES: Baba the Enlightened (speed scav)
 
-                this.FixBuffs1();
-                this.BuffNkuhana();
-                this.FixPickupStats();
+                #region ESSENTIAL
+                // healing
+                MedkitNerf();
+                MonsterToothNerf();
 
-                this.AdjustVanillaDefense();
-                this.AdjustVanillaMobility();
-                this.AdjustVanillaHealing();
+                // mobility
+                IL.EntityStates.GenericCharacterMain.ProcessJump += FeatherNerf;
+                GoatHoofNerf();
+                EnergyDrinkNerf();
 
-                //this.DoSpeedScavenger();
+                // defense
+                TeddyChanges();
+                #endregion
+
+                #region PACKETS
+                // scythe
+                if (GetConfigBool(currentCategory, true, "Harvesters Scythe"))
+                {
+                    ScytheNerf();
+                }
+
+                // dynamic jump
+                if (GetConfigBool(currentCategory, true, "Dynamic Jump"))
+                {
+                    IL.RoR2.CharacterMotor.PreMove += DynamicJump;
+                }
+
+                // jade elephant
+                if (GetConfigBool(currentCategory, true, "Jade Elephant"))
+                {
+                    JadeElephantChanges();
+                }
+
+                // medkit
+                if (GetConfigBool(currentCategory, true, "Medkit"))
+                {
+                    RoR2Content.Buffs.MedkitHeal.isDebuff = true;
+                }
+
+                // steak
+                if (GetConfigBool(currentCategory, true, "Bison Steak"))
+                {
+                    GetStatCoefficients += MeatReduceHealth;
+                    FreshMeatStackingFix();
+                    MeatBuff();
+                }
+
+                // nkuhana D+H
+                if (GetConfigBool(currentCategory, true, "(D+H) NKuhanas Opinion"))
+                {
+                    this.BuffNkuhana();
+                }
+
+                // droplet general
+                if (GetConfigBool(currentCategory, true, "Droplet General"))
+                {
+                    this.FixPickupStats();
+                }
+
+                // monster tooth
+                if (GetConfigBool(currentCategory, true, "Monster Tooth"))
+                {
+                    MonsterToothDurationBuff();
+                }
+
+
+                string armorChangesTitle = " Armor Packet";
+                string armorChangesDesc = "Set how much additional armor this item gives. Vanilla 0.";
+                AdjustVanillaDefense();
+
+                // knurl
+                knurlFreeArmor = Config.Bind<int>(currentCategory.ToString(), "Knurl" + armorChangesTitle, knurlFreeArmor, armorChangesDesc).Value;
+
+                // buckler
+                bucklerFreeArmor = Config.Bind<int>(currentCategory.ToString(), "Rose Buckler" + armorChangesTitle, bucklerFreeArmor, armorChangesDesc).Value;
+
+                // rap
+                rapFreeArmor = Config.Bind<int>(currentCategory.ToString(), "Repulsion Armor Plating" + armorChangesTitle, rapFreeArmor, armorChangesDesc).Value;
+                #endregion
             }
-            if (IsCategoryEnabled(BalanceCategory.StateOfHealth))
-            {
-                // borbos band, frozen turtle shell, flower crown, utility belt
-                // tesla coil
 
+            currentCategory = BalanceCategory.StateOfHealth;
+            if (IsCategoryEnabled(currentCategory))
+            {
+                // CONTENT...
+                // ITEMS: borbos band, frozen turtle shell, flower crown, utility belt
+                // EQUIPMENT: tesla coil
+                // ENEMIES: Bobo the Unbreakable (defense scav)
+
+                #region ESSENTIAL
+                //barrier
                 this.BuffBarrier();
-                this.FuckingFixInfusion();
+                #endregion
+
+                #region PACKETS
+                //infusion
+                if (GetConfigBool(currentCategory, true, "Infusion"))
+                {
+                    this.FuckingFixInfusion();
+                }
+                #endregion
                 //nerf engi turret max health?
-
-                //this.DoBoboScavenger();
             }
-            if (IsCategoryEnabled(BalanceCategory.StateOfInteraction))
+
+            currentCategory = BalanceCategory.StateOfInteraction;
+            if (IsCategoryEnabled(currentCategory))
             {
-                // atg mk3, magic quiver, wicked band, permafrost
+                // CONTENT...
+                // ITEMS: atg mk3, magic quiver, wicked band, permafrost
+                // EQUIPMENT:
+                // ENEMIES: 
 
-                this.BuffJustice();
+                #region ESSENTIAL
+                // misc
+                #endregion
+
+                #region PACKETS
+                // shattering justics
+                if (GetConfigBool(currentCategory, true, "Shattering Justice"))
+                {
+                    this.BuffJustice();
+                }
+
+                // resonance disc
+                if (GetConfigBool(currentCategory, true, "Resonance Disc"))
+                {
+                    ResonanceDiscNerfs();
+                    //this.NerfResDisc();
+                    EntityStates.LaserTurbine.FireMainBeamState.mainBeamProcCoefficient = 0.5f;
+                }
+
+                // jellynuke
+                if (GetConfigBool(currentCategory, true, "Jellynuke"))
+                {
+                    this.FixVagrantNova();
+                }
+
+                // planula
+                if (GetConfigBool(currentCategory, true, "Planula"))
+                {
+                    this.ReworkPlanula();
+                }
+
+                // shatterspleen, INT
+                if (GetConfigBool(currentCategory, true, "Shatterspleen"))
+                {
+                    this.ReworkShatterspleen();
+                }
+
+                // enemy blacklist
+                if (GetConfigBool(currentCategory, true, "Enemy Blacklist"))
+                {
+                    this.ChangeAIBlacklists();
+                    AIBlacklistSingleItem(RoR2Content.Items.NovaOnHeal);
+                    AIBlacklistSingleItem(RoR2Content.Items.Mushroom);
+                    AIBlacklistSingleItem(RoR2Content.Items.Medkit);
+                    AIBlacklistSingleItem(RoR2Content.Items.Tooth);
+                }
+
+                // enigma artifact
+                if (GetConfigBool(currentCategory, true, "Enigma Artifact"))
+                {
+                    RoR2Content.Equipment.CrippleWard.enigmaCompatible = true;
+                    RoR2Content.Equipment.Jetpack.enigmaCompatible = true;
+                }
+
+                // stuns
+                if (GetConfigBool(currentCategory, true, "Stun"))
+                {
+                    this.StunChanges();
+                }
+
+                // the backup
+                if (GetConfigBool(currentCategory, true, "The Backup Equipment"))
+                {
+                    RoR2Content.Equipment.DroneBackup.cooldown = 60;
+                }
+
+                string slowChangesTitle = " Slow Attack Speed Packet";
+                string slowChangesDesc = "Set how much this debuff slows attack speed, expressed as a decimal. Vanilla 0.";
                 this.BuffSlows();
-                this.NerfResDisc();
-                EntityStates.LaserTurbine.FireMainBeamState.mainBeamProcCoefficient = 0.5f;
-                this.FixVagrantNova();
 
-                this.ReworkPlanula();
-                this.ReworkShatterspleen();
+                // tar slow
+                tarSlowAspdReduction = Config.Bind<float>(currentCategory.ToString(), "Tar" + slowChangesTitle, tarSlowAspdReduction, slowChangesDesc).Value;
 
-                this.ChangeAIBlacklists();
-                AIBlacklistSingleItem(RoR2Content.Items.NovaOnHeal);
-                AIBlacklistSingleItem(RoR2Content.Items.Mushroom);
-                RoR2Content.Equipment.CrippleWard.enigmaCompatible = true;
-                RoR2Content.Equipment.Jetpack.enigmaCompatible = true;
-                RoR2Content.Equipment.DroneBackup.cooldown = 60;
+                // kit slow
+                kitSlowAspdReduction = Config.Bind<float>(currentCategory.ToString(), "Kit" + slowChangesTitle, kitSlowAspdReduction, slowChangesDesc).Value;
 
-                this.StunChanges();
-                this.MakeMinionsInheritOnKillEffects();
+                // chronobauble
+                chronoSlowAspdReduction = Config.Bind<float>(currentCategory.ToString(), "Chronobauble" + slowChangesTitle, chronoSlowAspdReduction, slowChangesDesc).Value;
+                #endregion
+
+
+
+
+                //this.MakeMinionsInheritOnKillEffects();
 
                 //scav could have royal cap? cunning
             }
-            if (IsCategoryEnabled(BalanceCategory.StateOfDamage))
-            {
-                // chefs stache, malware stick, new lopper, whetstone
-                // old guillotine
 
-                this.FixBuffs2();
-                this.BlanketNerfProcCoefficient();
-                this.FixMeteorFalloff();
+            currentCategory = BalanceCategory.StateOfDamage;
+            if (IsCategoryEnabled(currentCategory))
+            {
+                // CONTENT...
+                // ITEMS: chefs stache, malware stick, new lopper, whetstone
+                // EQUIPMENT: old guillotine
+                // ENEMIES: Chipchip the Wicked (debuff)
+
+                #region ESSENTIAL
+                // razorwire
+                RazorwireReworks();
+                On.RoR2.Orbs.LightningOrb.Begin += NerfRazorwireOrb;
+
+                // damage
                 this.NerfBands();
-                this.NerfCritGlasses();
-                this.EditWarCry();
                 this.StickyRework();
+                #endregion
+
+                #region PACKETS
+                // crits
+                if (GetConfigBool(currentCategory, true, "Critical Strike"))
+                {
+                    this.NerfCritGlasses();
+                    OcularHudBuff();
+                }
+
+                // death mark fix :)
+                if (GetConfigBool(currentCategory, true, "Death Mark Fix"))
+                {
+                    DeathMarkFix();
+                }
+
+                // molten perforator
+                if (GetConfigBool(currentCategory, true, "Molten Perforator"))
+                {
+                    CreateMeatballNapalm();
+                    ProjectileImpactExplosion meatballPIE = meatballProjectilePrefab.GetComponent<ProjectileImpactExplosion>();
+                    this.meatballProjectilePrefab.GetComponent<ProjectileImpactExplosion>().blastProcCoefficient = 0f; //0.7
+                    this.meatballProjectilePrefab.GetComponent<ProjectileImpactExplosion>().childrenCount = 1; //0
+                    this.meatballProjectilePrefab.GetComponent<ProjectileImpactExplosion>().childrenProjectilePrefab = meatballNapalmPool; //null
+                    this.meatballProjectilePrefab.GetComponent<ProjectileImpactExplosion>().fireChildren = true; //false
+                }
+
+                // charged perforator
+                if (GetConfigBool(currentCategory, true, "Charged Perforator"))
+                {
+                    On.RoR2.Orbs.SimpleLightningStrikeOrb.Begin += NerfChargedPerforatorOrb;
+                }
+
+                // shatterspleen, dmg
+                if (GetConfigBool(currentCategory, true, "(DMG) Shatterspleen"))
+                {
+                    this.spleenPrefab.GetComponent<RoR2.DelayBlast>().procCoefficient = 0f;
+                }
+
+                // fireworks
+                if (GetConfigBool(currentCategory, true, "Fireworks"))
+                {
+                    this.fireworkProjectilePrefab.GetComponent<ProjectileController>().procCoefficient = 0; //0.33f
+                }
+
+                // ceremonial dagger
+                if (GetConfigBool(currentCategory, true, "Ceremonial Dagger"))
+                {
+                    CeremonialDaggerNerfs();
+                }
+
+                // willowisp
+                if (GetConfigBool(currentCategory, true, "Will-o-the-Wisp"))
+                {
+                    WillowispNerfs();
+                }
+
+                // gasoline
+                if (GetConfigBool(currentCategory, true, "Gasoline"))
+                {
+                    GasolineChanges();
+                }
+
+                // meteorite
+                if (GetConfigBool(currentCategory, true, "Glowing Meteorite"))
+                {
+                    this.FixMeteorFalloff();
+                }
+
+                // warcry
+                if (GetConfigBool(currentCategory, true, "Warcry Buff"))
+                {
+                    this.EditWarCry();
+                }
+
+
+                On.RoR2.Orbs.DevilOrb.Begin += NerfDevilOrb;
+
+                // nkuhanas opinion, DMG
+                if (GetConfigBool(currentCategory, true, "(DMG) Nukuhanas Opinion"))
+                {
+                    opinionDevilorbProc = 0;
+                }
+
+                // little disciple
+                if (GetConfigBool(currentCategory, true, "Little Disciple"))
+                {
+                    discipleDevilorbProc = 0;
+                }
+                #endregion
 
                 //this.DoSadistScavenger();
             }
-            /*if (IsCategoryEnabled(BalanceCategory.StateOfDifficulty))
-            {
-                this.ChangeElites();
-                this.ChangeEliteBehavior();
-                this.DifficultyPlus();
-                this.FixMoneyAndExpRewards();
 
-                LanguageAPI.Add("DIFFICULTY_EASY_DESCRIPTION", $"Simplifies difficulty for players new to the game. Weeping and gnashing is replaced by laughter and tickles." +
-                    $"<style=cStack>\n\n>Player Health Regeneration: <style=cIsHealing>+50%</style> " +
-                    $"\n>Difficulty Scaling: <style=cIsHealing>-50%</style> " +
-                    $"\n>Teleporter Visuals: <style=cIsHealing>+{Tools.ConvertDecimal(easyTeleParticleRadius / normalTeleParticleRadius - 1)}</style> " +
-                    $"\n>{Tier2EliteName} Elites appear starting on <style=cIsHealing>Stage {Tier2EliteMinimumStageDrizzle + 1}</style> " +
-                    $"\n>Player Damage Reduction: <style=cIsHealing>+38%</style></style>");
-                // " + $"\n>Most Bosses have <style=cIsHealing>reduced skill sets</style>
 
-                LanguageAPI.Add("DIFFICULTY_NORMAL_DESCRIPTION", $"This is the way the game is meant to be played! Test your abilities and skills against formidable foes." +
-                    $"<style=cStack>\n\n>Player Health Regeneration: +0% " +
-                    $"\n>Difficulty Scaling: +0% " +
-                    $"\n>Teleporter Visuals: +0% " +
-                    $"\n>{Tier2EliteName} Elites appear starting on Stage {Tier2EliteMinimumStageRainstorm + 1}</style></style>");
-
-                LanguageAPI.Add("DIFFICULTY_HARD_DESCRIPTION", $"For hardcore players. Every bend introduces pain and horrors of the planet. You will die." +
-                    $"<style=cStack>\n\n>Player Health Regeneration: <style=cIsHealth>-40%</style> " +
-                    $"\n>Difficulty Scaling: <style=cIsHealth>+50%</style>" +
-                    $"\n>Teleporter Visuals: <style=cIsHealth>{Tools.ConvertDecimal(1 - hardTeleParticleRadius / normalTeleParticleRadius)}</style> " +
-                    $"\n>{Tier2EliteName} Elites appear starting on <style=cIsHealth>Stage {Tier2EliteMinimumStageMonsoon + 1}</style>" + 
-                    $"\n>Most Enemies have <style=cIsHealth>unique scaling</style></style>");
-            }*/
             //lol
             LanguageAPI.Add("ITEM_SHOCKNEARBY_PICKUP", "lol");
             LanguageAPI.Add("ITEM_AUTOCASTEQUIPMENT_PICKUP", "lol");
@@ -198,6 +427,76 @@ namespace Borbo
 
             InitializeCoreModules();
             new ContentPacks().Initialize();
+        }
+        GameObject meatballNapalmPool;
+        private void CreateMeatballNapalm()
+        {
+            meatballNapalmPool = Resources.Load<GameObject>("prefabs/projectiles/beetlequeenacid").InstantiateClone("NapalmFire", true);
+
+            Color napalmColor = new Color32(255, 120, 0, 255);
+
+
+            Transform pDotObjDecal = meatballNapalmPool.transform.Find("FX/Decal");
+            Material napalmDecalMaterial = new Material(pDotObjDecal.GetComponent<Decal>().Material);
+            napalmDecalMaterial.SetColor("_Color", napalmColor);
+            pDotObjDecal.GetComponent<Decal>().Material = napalmDecalMaterial;
+
+            ProjectileDotZone pdz = meatballNapalmPool.GetComponent<ProjectileDotZone>();
+            pdz.lifetime = 8f;
+            pdz.fireFrequency = 0.5f;
+            pdz.damageCoefficient = 1f;
+            pdz.overlapProcCoefficient = 0.3f;
+            pdz.attackerFiltering = AttackerFiltering.Default;
+            meatballNapalmPool.GetComponent<ProjectileDamage>().damageType = DamageType.IgniteOnHit;
+            meatballNapalmPool.GetComponent<ProjectileController>().procCoefficient = 1f;
+
+            float decalScale = 5f;
+            meatballNapalmPool.GetComponent<Transform>().localScale = new Vector3(decalScale, decalScale, decalScale);
+
+            Transform transform = meatballNapalmPool.transform.Find("FX");
+            transform.Find("Spittle").gameObject.SetActive(false);
+
+            GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(
+                Resources.Load<GameObject>("prefabs/FireTrail").GetComponent<DamageTrail>().segmentPrefab, transform.transform);
+            ParticleSystem.MainModule main = gameObject.GetComponent<ParticleSystem>().main;
+            main.duration = 8f;
+            main.gravityModifier = -0.075f;
+            ParticleSystem.MinMaxCurve startSizeX = main.startSizeX;
+            startSizeX.constantMin *= 0.6f;
+            startSizeX.constantMax *= 0.8f;
+            ParticleSystem.MinMaxCurve startSizeY = main.startSizeY;
+            startSizeY.constantMin *= 0.8f;
+            startSizeY.constantMax *= 1f;
+            ParticleSystem.MinMaxCurve startSizeZ = main.startSizeZ;
+            startSizeZ.constantMin *= 0.6f;
+            startSizeZ.constantMax *= 0.8f;
+            ParticleSystem.MinMaxCurve startLifetime = main.startLifetime;
+            startLifetime.constantMin = 0.9f;
+            startLifetime.constantMax = 1.1f;
+            gameObject.GetComponent<DestroyOnTimer>().enabled = false;
+            gameObject.transform.localPosition = Vector3.zero;
+            gameObject.transform.localPosition = Vector3.zero;
+            gameObject.transform.localScale = Vector3.one;
+            ParticleSystem.ShapeModule shape = gameObject.GetComponent<ParticleSystem>().shape;
+            shape.shapeType = ParticleSystemShapeType.Sphere;
+            shape.scale = Vector3.one * 0.5f;
+
+            GameObject gameObject2 = transform.Find("Point Light").gameObject;
+            Light component2 = gameObject2.GetComponent<Light>();
+            component2.color = new Color(1f, 0.5f, 0f);
+            component2.intensity = 6f;
+            component2.range = 12f;
+
+            Assets.projectilePrefabs.Add(meatballNapalmPool);
+        }
+
+        private bool GetConfigBool(BalanceCategory currentCategory, bool defaultValue, string packetTitle, string desc = "")
+        {
+            if(desc != "")
+            {
+                return Config.Bind<bool>(currentCategory + " Packets - See README For Details.", packetTitle + " Packet", defaultValue, $"The changes in this Packet will be enabled if set to true.").Value;
+            }
+            return Config.Bind<bool>(currentCategory + " Packets", packetTitle + " Packet", defaultValue, "(The following changes will be enabled if set to true) " + desc).Value;
         }
 
         #region config
@@ -221,8 +520,8 @@ namespace Borbo
             string categoryName = (category).ToString();
 
             ConfigEntry<bool> newCategoryConfig = CustomConfigFile.Bind<bool>(
+                "Disable Balance Categories",
                 categoryName,
-                "DISABLE changes?",
                 false,
                 $"Set this to TRUE if you would like to disable changes for the balance category: {categoryName}"
                 );
