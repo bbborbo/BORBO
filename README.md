@@ -105,14 +105,7 @@ Added Scavenger: Bobo the Unbreakable
 
 ### ESSENTIAL CHANGES...
 ```
-Boss Items:
-- All bosses now have a chance to drop their boss items on death
-- Boss items no longer drop from the teleporter (Someone remind me to look into replacing this feature at a later date)
-* This can be configured for Aurelionite *
-
-Misc:
-- Chill Slow now also reduces attack speed of those afflicted by 60%
-- Reduced Lunar Chimera Wisp base attack speed to 70%
+None!
 ```
 
 ### FEATURES & CONTENT...
@@ -122,11 +115,7 @@ Added Equipment: Old Guillotine (replaces Old Guillotine)
 ```
 
 ### OTHER...
-```
-(Boss Printers packet)
-- Removed Overgrown Printers entirely
-
-(Shattering Justice packet)
+```(Shattering Justice packet)
 - Shattering Justice now instantly pulverizes on hits that deal more than 800% base damage on top of vanilla effects
 
 (Tar packet)
@@ -243,41 +232,6 @@ Added Scavenger: Chipchip the Wicked
 - Warcry now grants +100% damage and +50% attack speed instead of +100% attack speed
 ```
 
-# State of Economy
-
-### ESSENTIAL CHANGES...
-```
-- Increased scaling of interactable prices from 1.25 to 1.6
-- Legendary Chests now have a cost multiplier of 10x instead of 16x
-- Big Drones now have a cost multiplier of 8x instead of 14x
-- AWU now has adaptive armor to help match chest cost scaling
-- Monsters spawned by the teleporter event drop even less gold. Spend more time in combat!
-```
-
-### FEATURES & CONTENT...
-```
-Added Item: Golden Gun
-Added Scavenger: Gibgib the Greedy
-```
-
-### OTHER...
-```
-(Printer packet)
-- Printers now only spawn on stages 2, 4, and 5
-- Increased Green printer spawn rate
-- Increased Red printer spawn rate (ESPECIALLY on stage 5)
-
-(Scrapper packet)
-- Scrappers now only spawn on stages 1 and 3
-- Increased Scrapper spawn rate
-
-(Newt packet)
-- Every newt altar now only has a 30% chance to spawn, including ones which were previously guaranteed to spawn
-
-(Blood packet)
-- Blood shrines now grant 2 chests worth of gold per health bar sacrificed
-```
-
 # State of Difficulty
 
 ### ESSENTIAL CHANGES...
@@ -315,6 +269,53 @@ Added T2 Elite: Serpentine
 - Reduced overloading bomb lifetime from 1.5s to 1.2s
 - Overloading elites now deal far less knockback to players
 - Increased the damage of overloading bombs from 50% total to 150% total
+```
+
+# State of Economy
+
+### ESSENTIAL CHANGES...
+```
+- Increased scaling of interactable prices from 1.25 to 1.6
+- Legendary Chests now have a cost multiplier of 10x instead of 16x
+- Big Drones now have a cost multiplier of 8x instead of 14x
+- AWU now has adaptive armor to help match chest cost scaling
+- Monsters spawned by the teleporter event drop even less gold. Spend more time in combat!
+
+Boss Items:
+- All bosses now have a chance to drop their boss items on death
+- Boss items no longer drop from the teleporter (Someone remind me to look into replacing this feature at a later date)
+* This can be configured for Aurelionite *
+
+Misc:
+- Chill Slow now also reduces attack speed of those afflicted by 60%
+- Reduced Lunar Chimera Wisp base attack speed to 70%
+```
+
+### FEATURES & CONTENT...
+```
+Added Item: Golden Gun
+Added Scavenger: Gibgib the Greedy
+```
+
+### OTHER...
+```
+(Boss Printers packet)
+- Removed Overgrown Printers entirely
+
+(Printer packet)
+- Printers now only spawn on stages 2, 4, and 5
+- Increased Green printer spawn rate
+- Increased Red printer spawn rate (ESPECIALLY on stage 5)
+
+(Scrapper packet)
+- Scrappers now only spawn on stages 1 and 3
+- Increased Scrapper spawn rate
+
+(Newt packet)
+- Every newt altar now only has a 30% chance to spawn, including ones which were previously guaranteed to spawn
+
+(Blood packet)
+- Blood shrines now grant 2 chests worth of gold per health bar sacrificed
 ```
 
 
