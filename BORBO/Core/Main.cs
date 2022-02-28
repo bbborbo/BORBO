@@ -37,7 +37,7 @@ namespace Borbo
     [BepInDependency("com.Borbo.ArtifactGesture", BepInDependency.DependencyFlags.SoftDependency)]
 
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin("com.Borbo.BORBO", "BORBO", "0.4.11")]
+    [BepInPlugin("com.Borbo.BORBO", "BORBO", "0.5.0")]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(BuffAPI), nameof(PrefabAPI), 
         nameof(EffectAPI), nameof(ResourcesAPI), nameof(DirectorAPI), 
         nameof(ItemAPI), nameof(RecalculateStatsAPI), nameof(EliteAPI))]
@@ -180,13 +180,13 @@ namespace Borbo
                 AdjustVanillaDefense();
 
                 // knurl
-                knurlFreeArmor = Config.Bind<int>(currentCategory.ToString(), "Knurl" + armorChangesTitle, knurlFreeArmor, armorChangesDesc).Value;
+                knurlFreeArmor = CustomConfigFile.Bind<int>(currentCategory.ToString() + " Packet", "Knurl" + armorChangesTitle, knurlFreeArmor, armorChangesDesc).Value;
 
                 // buckler
-                bucklerFreeArmor = Config.Bind<int>(currentCategory.ToString(), "Rose Buckler" + armorChangesTitle, bucklerFreeArmor, armorChangesDesc).Value;
+                bucklerFreeArmor = CustomConfigFile.Bind<int>(currentCategory.ToString() + " Packet", "Rose Buckler" + armorChangesTitle, bucklerFreeArmor, armorChangesDesc).Value;
 
                 // rap
-                rapFreeArmor = Config.Bind<int>(currentCategory.ToString(), "Repulsion Armor Plating" + armorChangesTitle, rapFreeArmor, armorChangesDesc).Value;
+                rapFreeArmor = CustomConfigFile.Bind<int>(currentCategory.ToString() + " Packet", "Repulsion Armor Plating" + armorChangesTitle, rapFreeArmor, armorChangesDesc).Value;
                 #endregion
             }
 
@@ -292,13 +292,13 @@ namespace Borbo
                 this.BuffSlows();
 
                 // tar slow
-                tarSlowAspdReduction = Config.Bind<float>(currentCategory.ToString(), "Tar" + slowChangesTitle, tarSlowAspdReduction, slowChangesDesc).Value;
+                tarSlowAspdReduction = CustomConfigFile.Bind<float>(currentCategory.ToString() + " Packet", "Tar" + slowChangesTitle, tarSlowAspdReduction, slowChangesDesc).Value;
 
                 // kit slow
-                kitSlowAspdReduction = Config.Bind<float>(currentCategory.ToString(), "Kit" + slowChangesTitle, kitSlowAspdReduction, slowChangesDesc).Value;
+                kitSlowAspdReduction = CustomConfigFile.Bind<float>(currentCategory.ToString() + " Packet", "Kit" + slowChangesTitle, kitSlowAspdReduction, slowChangesDesc).Value;
 
                 // chronobauble
-                chronoSlowAspdReduction = Config.Bind<float>(currentCategory.ToString(), "Chronobauble" + slowChangesTitle, chronoSlowAspdReduction, slowChangesDesc).Value;
+                chronoSlowAspdReduction = CustomConfigFile.Bind<float>(currentCategory.ToString() + " Packet", "Chronobauble" + slowChangesTitle, chronoSlowAspdReduction, slowChangesDesc).Value;
                 #endregion
 
 
@@ -442,15 +442,15 @@ namespace Borbo
             pDotObjDecal.GetComponent<Decal>().Material = napalmDecalMaterial;
 
             ProjectileDotZone pdz = meatballNapalmPool.GetComponent<ProjectileDotZone>();
-            pdz.lifetime = 8f;
-            pdz.fireFrequency = 0.5f;
-            pdz.damageCoefficient = 1f;
-            pdz.overlapProcCoefficient = 0.3f;
+            pdz.lifetime = 5f;
+            pdz.fireFrequency = 2f;
+            pdz.damageCoefficient = 0.5f;
+            pdz.overlapProcCoefficient = 0.5f;
             pdz.attackerFiltering = AttackerFiltering.Default;
             meatballNapalmPool.GetComponent<ProjectileDamage>().damageType = DamageType.IgniteOnHit;
             meatballNapalmPool.GetComponent<ProjectileController>().procCoefficient = 1f;
 
-            float decalScale = 5f;
+            float decalScale = 2.5f;
             meatballNapalmPool.GetComponent<Transform>().localScale = new Vector3(decalScale, decalScale, decalScale);
 
             Transform transform = meatballNapalmPool.transform.Find("FX");
@@ -494,9 +494,13 @@ namespace Borbo
         {
             if(desc != "")
             {
-                return Config.Bind<bool>(currentCategory + " Packets - See README For Details.", packetTitle + " Packet", defaultValue, $"The changes in this Packet will be enabled if set to true.").Value;
+                return CustomConfigFile.Bind<bool>(currentCategory + " Packets - See README For Details.", 
+                    packetTitle + " Packet", defaultValue, 
+                    $"The changes in this Packet will be enabled if set to true.").Value;
             }
-            return Config.Bind<bool>(currentCategory + " Packets", packetTitle + " Packet", defaultValue, "(The following changes will be enabled if set to true) " + desc).Value;
+            return CustomConfigFile.Bind<bool>(currentCategory + " Packets", 
+                packetTitle + " Packet", defaultValue, 
+                "(The following changes will be enabled if set to true) " + desc).Value;
         }
 
         #region config
@@ -523,7 +527,7 @@ namespace Borbo
                 "Disable Balance Categories",
                 categoryName,
                 false,
-                $"Set this to TRUE if you would like to disable changes for the balance category: {categoryName}"
+                $"Set this to TRUE if you would like to DISABLE changes for the balance category: {categoryName}"
                 );
 
             return newCategoryConfig;
@@ -578,7 +582,7 @@ namespace Borbo
             {
                 string name = scav.ScavName.Replace("'", "");
                 enabled = IsCategoryEnabled(category) &&
-                CustomConfigFile.Bind<bool>(category.ToString(), $"Enable Twisted Scavenger: {name}", true, "Should this scavenger appear in A Moment, Whole?").Value;
+                CustomConfigFile.Bind<bool>(category.ToString() + " Content", $"Enable Twisted Scavenger: {name} the {scav.ScavTitle}", true, "Should this scavenger appear in A Moment, Whole?").Value;
             }
             else
             {
@@ -625,13 +629,13 @@ namespace Borbo
         {
             BalanceCategory category = item.Category;
 
-            var itemEnabled = true;
+            var itemEnabled = item.Tier == ItemTier.NoTier;
 
-            if (category != BalanceCategory.None && category != BalanceCategory.Count)
+            if (category != BalanceCategory.None && category != BalanceCategory.Count && !itemEnabled)
             {
                 string name = item.ItemName.Replace("'", "");
                 itemEnabled = IsCategoryEnabled(category) &&
-                CustomConfigFile.Bind<bool>(category.ToString(), $"Enable Item: {name}", true, "Should this item appear in runs?").Value;
+                CustomConfigFile.Bind<bool>(category.ToString() + " Content", $"Enable Item: {name}", true, "Should this item appear in runs?").Value;
             }
             else
             {
@@ -677,7 +681,7 @@ namespace Borbo
             if (category != BalanceCategory.None && category != BalanceCategory.Count)
             {
                 itemEnabled = IsCategoryEnabled(category) &&
-                CustomConfigFile.Bind<bool>(category.ToString(), "Enable Equipment: " + equipment.EquipmentName, true, "Should this item appear in runs?").Value;
+                CustomConfigFile.Bind<bool>(category.ToString() + " Content", "Enable Equipment: " + equipment.EquipmentName, true, "Should this item appear in runs?").Value;
             }
             else
             {
@@ -719,7 +723,7 @@ namespace Borbo
             if (category != BalanceCategory.None && category != BalanceCategory.Count)
             {
                 itemEnabled = IsCategoryEnabled(category) &&
-                CustomConfigFile.Bind<bool>(category.ToString(), "Enable Equipment: " + equipment.EliteEquipmentName, true, "Should this item appear in runs?").Value;
+                CustomConfigFile.Bind<bool>(category.ToString() + " Content", $"Enable Aspect: {equipment.EliteEquipmentName} ({equipment.EliteModifier} Elite)", true, "Should these elites appear in runs?").Value;
             }
             else
             {

@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2276600945
+CRC: 2030192499
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1e68234aefd26a384823d0e1d64de792
+    Hash: 97c51cb3c01634c513ece2eb3cdb3abd
   TypeTreeHash:
     serializedVersion: 2
     Hash: 21747e4ee48f36c7a65f9afbfd77f392
@@ -28,11 +28,17 @@ ClassTypes:
 - Class: 213
   Script: {instanceID: 0}
 Assets:
+- Assets/Models/DropPrefabs/Item/Quiver.prefab
 - Assets/Textures/Icons/Item/texIconNewLopper.png
+- Assets/Textures/Materials/Item/matQuiver.mat
 - Assets/Models/DropPrefabs/Item/NewLopper.prefab
 - Assets/Models/Meshes/borbolopper.fbx
 - Assets/Textures/Icons/Item/texIconWickedBand.png
+- Assets/Textures/Materials/Item/quiver_quiver_Normal.png
+- Assets/Textures/Icons/Item/texIconQuiver.png
 - Assets/Models/DropPrefabs/Item/WickedBand.prefab
+- Assets/Textures/Materials/Item/quiver_quiver_BaseColor.png
+- Assets/Textures/Materials/Item/quiver_quiver_Emissive.png
 - Assets/Textures/Materials/Item/matLopper.mat
 - Assets/Textures/Materials/Item/matWickedBand.mat
 Dependencies: []

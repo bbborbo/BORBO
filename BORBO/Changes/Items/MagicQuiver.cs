@@ -34,9 +34,9 @@ namespace Borbo.Items
         public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Utility };
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfInteraction;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("prefabs/NullModel");
+        public override GameObject ItemModel => LoadDropPrefab("Quiver");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("textures/miscicons/texWIPIcon");
+        public override Sprite ItemIcon => LoadItemIcon("texIconQuiver");
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {

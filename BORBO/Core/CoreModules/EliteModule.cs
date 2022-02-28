@@ -11,6 +11,7 @@ namespace Borbo.CoreModules
 {
     public class EliteModule : CoreModule
     {
+        //i love you nebby <3
         public static List<CustomEliteDef> Elites = new List<CustomEliteDef>();
         public static Texture defaultShaderRamp = Main.assetBundle.LoadAsset<Texture>(Main.assetsPath + "texRampFrenzied.tex");
 

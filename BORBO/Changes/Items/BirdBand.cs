@@ -18,7 +18,7 @@ namespace Borbo.Items
         public float regenDurationBase = 0.3f;
         public float regenDurationStack = 0.3f;
 
-        public override string ItemName => "Borbo's Band";
+        public override string ItemName => "Borbo\u2019s Band";
 
         public override string ItemLangTokenName => "BIRDBAND";
 

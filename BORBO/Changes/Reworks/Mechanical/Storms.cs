@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace BORBO.Changes.Reworks.Mechanical
+namespace Borbo
 {
     internal partial class Main : BaseUnityPlugin
     {
