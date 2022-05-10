@@ -177,10 +177,10 @@ namespace Borbo.Equipment
             EliteBuffDef.eliteDef = EliteDef;
 
 
-            BuffAPI.Add(new CustomBuff(EliteBuffDef));
             ItemAPI.Add(new CustomEquipment(EliteEquipmentDef, CreateItemDisplayRules()));
             //EliteAPI.Add(new CustomElite(EliteDef, CanAppearInEliteTiers));
             Assets.eliteDefs.Add(EliteDef);
+            Assets.buffDefs.Add(EliteBuffDef);
 
             #region BorboEliteDef
             CustomEliteDef BED = ScriptableObject.CreateInstance<CustomEliteDef>();

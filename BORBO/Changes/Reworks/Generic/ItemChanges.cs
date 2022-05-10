@@ -23,6 +23,15 @@ namespace Borbo
 
             itemDef.tags = itemTags.ToArray();
         }
+        #region blacklist
+        void HealingItemBlacklist()
+        {
+            AIBlacklistSingleItem(RoR2Content.Items.NovaOnHeal);
+            AIBlacklistSingleItem(RoR2Content.Items.Mushroom);
+            AIBlacklistSingleItem(RoR2Content.Items.Medkit);
+            AIBlacklistSingleItem(RoR2Content.Items.Tooth);
+        }
+        #endregion
 
         #region stuns
         public static float capacitorDamageCoefficient = 10f;
@@ -266,9 +275,9 @@ namespace Borbo
         {
             ILCursor c = new ILCursor(il);
 
-            int bodyLoc = 17;
-            int countLoc = 33;
-            int capLoc = 47;
+            int attackerBodyLoc = 15; //really need to be getting this through IL but i dont care tbh
+            int countLoc = 43;
+            int capLoc = 63;
 
             c.GotoNext(MoveType.After,
                 x => x.MatchLdsfld("RoR2.RoR2Content/Items", "Infusion"),
@@ -276,12 +285,16 @@ namespace Borbo
                 x => x.MatchStloc(out countLoc)
                 );
 
-            c.GotoNext(MoveType.Before,
+            c.GotoNext(MoveType.After,
+                x => x.MatchLdloc(out countLoc),
+                x => x.MatchLdcI4(out _),
+                x => x.MatchMul(),
                 x => x.MatchStloc(out capLoc)
                 );
+            c.Index--;
 
             c.Emit(OpCodes.Ldloc, countLoc);
-            c.Emit(OpCodes.Ldloc, 13);
+            c.Emit(OpCodes.Ldloc, attackerBodyLoc); //body loc
             c.EmitDelegate<Func<int, int, RoR2.CharacterBody, int>>((currentInfusionCap, infusionCount, body) =>
             {
                 float newInfusionCap = 100 * infusionCount;

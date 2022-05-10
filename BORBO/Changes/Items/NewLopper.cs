@@ -71,31 +71,24 @@ Autopsy reveals degradation of internal organs predating [REDACTED]’s death. S
         public override void Hooks()
         {
             On.RoR2.CharacterBody.OnInventoryChanged += AddItemBehavior;
-            GetStatCoefficients += this.GiveBonusCritChance;
-            BorboStatCoefficients += this.GiveBonusCritDamage;
+            GetStatCoefficients += this.GiveBonusCrit;
         }
 
-        private void GiveBonusCritDamage(CharacterBody sender, BorboStatHookEventArgs args)
-        {
-            int buffCount = sender.GetBuffCount(dangerCritBuff);
-            if (buffCount > 0)
-            {
-                args.critDamageMultAdd += bonusCritDamageLowHealthBase + bonusCritDamageLowHealthStack * buffCount;
-            }
-        }
-
-        private void GiveBonusCritChance(CharacterBody sender, StatHookEventArgs args)
+        private void GiveBonusCrit(CharacterBody sender, StatHookEventArgs args)
         {
             if(GetCount(sender) > 0)
             {
                 int critAdd = freeCritChance;
+                float critDmgAdd = 0;
 
                 int buffCount = sender.GetBuffCount(dangerCritBuff);
                 if (buffCount > 0)
                 {
                     critAdd = dangerCritChance;
+                    critDmgAdd = bonusCritDamageLowHealthBase + bonusCritDamageLowHealthStack * buffCount;
                 }
                 args.critAdd += critAdd;
+                args.critDamageMultAdd += critDmgAdd;
             }
         }
 

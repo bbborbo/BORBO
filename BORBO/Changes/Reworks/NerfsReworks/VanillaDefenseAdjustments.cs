@@ -270,6 +270,7 @@ namespace Borbo
 
         private void MedkitNerf()
         {
+            RoR2Content.Buffs.MedkitHeal.isDebuff = true;
             IL.RoR2.CharacterBody.RemoveBuff_BuffIndex += MedkitHealChange;
             LanguageAPI.Add("ITEM_MEDKIT_DESC",
                 $"2 seconds after getting hurt, <style=cIsHealing>heal</style> for " +
@@ -387,7 +388,7 @@ namespace Borbo
                 int meatCount = inv.GetItemCount(RoR2Content.Items.FlatHealth);
                 if (meatCount > 0)
                 {
-                    attackerBody.AddTimedBuffAuthority(RoR2Content.Buffs.MeatRegenBoost.buffIndex, 3 * meatCount);
+                    attackerBody.AddTimedBuffAuthority(JunkContent.Buffs.MeatRegenBoost.buffIndex, 3 * meatCount);
                 }
             }
             orig(self, damageReport);

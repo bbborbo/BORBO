@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Borbo.CoreModules
 {
@@ -86,7 +87,7 @@ namespace Borbo.CoreModules
             shatterspleenSpikeBuff.canStack = true;
             shatterspleenSpikeBuff.isDebuff = false;
             shatterspleenSpikeBuff.name = "ShatterspleenSpikeCharge";
-            shatterspleenSpikeBuff.iconSprite = RoR2Content.Buffs.LunarDetonationCharge.iconSprite;
+            shatterspleenSpikeBuff.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffLunarDetonatorIcon");
 
             buffDefs.Add(shatterspleenSpikeBuff);
         }

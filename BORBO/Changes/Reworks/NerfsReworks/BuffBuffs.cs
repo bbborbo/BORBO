@@ -20,12 +20,12 @@ namespace Borbo
         float deathMarkBonusDamage = 0.3f;
 
 
-        //meat buff broken, sad, :(, removed the buff internally so cannot fix without making a new buff whichi might to later,,, cya freinds,,,
-      //  private void FreshMeatStackingFix()
-      //  {
-      //      RoR2Content.Buffs.MeatRegenBoost.canStack = true;
-      //      GetStatCoefficients += LetMeatActuallyStack;
-      //  }
+        
+        private void FreshMeatStackingFix()
+        {
+            JunkContent.Buffs.MeatRegenBoost.canStack = true;
+            GetStatCoefficients += LetMeatActuallyStack;
+        }
 
         float elephantBuffDuration = 10;
         int elephantArmor = 200;
@@ -54,16 +54,15 @@ namespace Borbo
             return true;
         }
 
-        //see above
-     //   private void LetMeatActuallyStack(CharacterBody sender, StatHookEventArgs args)
-     //   {
-     //       int meatBuffCount = sender.GetBuffCount(RoR2Content.Buffs.MeatRegenBoost);
-     //
-     //       if (meatBuffCount > 1)
-     //       {
-     //           args.baseRegenAdd += 2 * (1 + 0.2f * (sender.level - 1)) * (meatBuffCount - 1);
-     //       }
-     //   }
+        private void LetMeatActuallyStack(CharacterBody sender, StatHookEventArgs args)
+        {
+            int meatBuffCount = sender.GetBuffCount(JunkContent.Buffs.MeatRegenBoost);
+     
+            if (meatBuffCount > 1)
+            {
+                args.baseRegenAdd += 2 * (1 + 0.2f * (sender.level - 1)) * (meatBuffCount - 1);
+            }
+        }
         #endregion
 
         #region slows
@@ -121,7 +120,7 @@ namespace Borbo
         float critHudDamageMul = 1;
         private void OcularHudBuff()
         {
-            BorboStatCoefficients += HudCritDamage;
+            GetStatCoefficients += HudCritDamage;
             LanguageAPI.Add("EQUIPMENT_CRITONUSE_PICKUP", "Increased 'Critical Strike' damage. Gain 100% Critical Strike Chance for 8 seconds.");
             LanguageAPI.Add("EQUIPMENT_CRITONUSE_DESC",
                 "<style=cIsHealth>Passively double Critical Strike Damage</style>. " +
@@ -184,7 +183,7 @@ namespace Borbo
             });
         }
 
-        private void HudCritDamage(CharacterBody sender, BorboStatHookEventArgs args)
+        private void HudCritDamage(CharacterBody sender, StatHookEventArgs args)
         {
             if (sender.equipmentSlot)
             {

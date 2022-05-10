@@ -103,13 +103,13 @@ namespace Borbo.Equipment
         {
             IL.RoR2.EquipmentSlot.UpdateTargets += GuillotineTargeting;
             On.RoR2.GlobalEventManager.OnCharacterDeath += GuillotineExecuteBehavior;
-            On.RoR2.ItemCatalog.Init += ChangeVanillaItemTier;
+            On.RoR2.ItemCatalog.SetItemDefs += ChangeVanillaItemTier;
             On.RoR2.BodyCatalog.Init += GetDisplayRules;
         }
-        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_Init orig)
+        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_SetItemDefs orig, ItemDef[] newItemDefs)
         {
-            orig();
             RoR2Content.Items.ExecuteLowHealthElite.tier = ItemTier.NoTier;
+            orig(newItemDefs);
         }
 
         private void GuillotineExecuteBehavior(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)

@@ -46,15 +46,15 @@ namespace Borbo.Items
             "Turning to face the oncoming mob, he loaded his shotgun. The adrenaline started pumping.\n\n" +
 
             "'Bring it on.'";
-            
-            /*"Order: AtG Missile Mk. 3" +
-            "\nTracking Number: 162***********" +
-            "\nEstimated Delivery: [REDACTED]" +
-            "\nShipping Method: MILITARY" +
-            "\nShipping Address: Belt Num.1053" +
-            "\nShipping Details:\n" +
-            "\nHow much more firepower does [REDACTED] need? For your sake, we revisited the last iteration of the Viper Missile System. Please do not ask us again - or we will come to [REDACTED] and take care of it ourselves. You do not want that, trust me.\n" +
-            "\nWe kept most of the features of the Mk. 2 system, but it should be far more stable for field use. Consider it the best of both worlds.";*/
+
+        /*"Order: AtG Missile Mk. 3" +
+        "\nTracking Number: 162***********" +
+        "\nEstimated Delivery: [REDACTED]" +
+        "\nShipping Method: MILITARY" +
+        "\nShipping Address: Belt Num.1053" +
+        "\nShipping Details:\n" +
+        "\nHow much more firepower does [REDACTED] need? For your sake, we revisited the last iteration of the Viper Missile System. Please do not ask us again - or we will come to [REDACTED] and take care of it ourselves. You do not want that, trust me.\n" +
+        "\nWe kept most of the features of the Mk. 2 system, but it should be far more stable for field use. Consider it the best of both worlds.";*/
 
         public override ItemTier Tier => ItemTier.Tier2;
         public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Damage };
@@ -105,7 +105,7 @@ namespace Borbo.Items
         {
             missilePrefab.GetComponent<ProjectileController>().procCoefficient = procCoefficient;
             On.RoR2.CharacterBody.OnInventoryChanged += AddItemBehavior;
-            On.RoR2.ItemCatalog.Init += ChangeVanillaItemTier;
+            On.RoR2.ItemCatalog.SetItemDefs += ChangeVanillaItemTier;
             On.RoR2.GlobalEventManager.OnHitEnemy += AtgReworkLogic;
             IL.RoR2.GlobalEventManager.OnHitEnemy += RemoveVanillaAtgLogic;
             On.RoR2.BodyCatalog.Init += GetDisplayRules;
@@ -125,10 +125,10 @@ namespace Borbo.Items
             orig(self);
             self.AddItemBehavior<Mk3MissileBehavior>(GetCount(self));
         }
-        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_Init orig)
+        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_SetItemDefs orig, ItemDef[] newItemDefs)
         {
-            orig();
             RoR2Content.Items.Missile.tier = ItemTier.NoTier;
+            orig(newItemDefs);
         }
 
         private void RemoveVanillaAtgLogic(ILContext il)

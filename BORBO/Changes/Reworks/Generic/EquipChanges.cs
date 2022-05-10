@@ -15,7 +15,12 @@ namespace Borbo
             RoR2Content.Equipment.Fruit,
             RoR2Content.Equipment.LifestealOnHit
         };
-        void ChangeAIBlacklists()
+        void ChangeEnigmaBlacklists()
+        {
+            RoR2Content.Equipment.CrippleWard.enigmaCompatible = true;
+            RoR2Content.Equipment.Jetpack.enigmaCompatible = true;
+        }
+        void ChangeEquipmentBlacklists()
         {
             On.RoR2.Inventory.SetEquipmentIndex += BlacklistEquipmentFromScavengers;
         }
@@ -60,7 +65,5 @@ namespace Borbo
             orig(self, damageInfo);
         }
         #endregion
-
-
     }
 }

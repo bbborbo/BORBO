@@ -113,13 +113,13 @@ namespace Borbo.Equipment
         {
             On.RoR2.GlobalEventManager.OnCharacterDeath += GrantShieldOnKill;
             GetStatCoefficients += AddBonusShield;
-            On.RoR2.ItemCatalog.Init += ChangeVanillaItemTier;
+            On.RoR2.ItemCatalog.SetItemDefs += ChangeVanillaItemTier;
             On.RoR2.BodyCatalog.Init += GetDisplayRules;
         }
-        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_Init orig)
+        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_SetItemDefs orig, ItemDef[] newItemDefs)
         {
-            orig();
             RoR2Content.Items.ShockNearby.tier = ItemTier.NoTier;
+            orig(newItemDefs);
         }
 
         private void AddBonusShield(CharacterBody sender, StatHookEventArgs args)

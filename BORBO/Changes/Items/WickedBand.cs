@@ -30,7 +30,7 @@ namespace Borbo.Items
         public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier3;
-		public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Utility };
+        public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Utility };
 		public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfInteraction;
 
         public override GameObject ItemModel => LoadDropPrefab("WickedBand");
@@ -62,7 +62,7 @@ namespace Borbo.Items
                                 // clone the original item display rule
 
                                 Array.Resize(ref idrs.keyAssetRuleGroups, idrs.keyAssetRuleGroups.Length + 1);
-                                idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].displayRuleGroup = idrs.FindDisplayRuleGroup(RoR2Content.Items.CooldownOnCrit);
+                                idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].displayRuleGroup = idrs.FindDisplayRuleGroup(JunkContent.Items.CooldownOnCrit);
                                 idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].keyAsset = def;
 
                                 idrs.GenerateRuntimeValues();

@@ -81,9 +81,10 @@ namespace Borbo
         {
             InitializeConfig();
             InitializeItems();
-            InitializeEquipment();
-            InitializeEliteEquipment();
-            InitializeScavengers();
+            //InitializeEquipment();
+            //InitializeEliteEquipment();
+            //InitializeScavengers();
+            RoR2Application.onLoad += InitializeEverything;
 
             if (isAELoaded)
             {
@@ -99,6 +100,17 @@ namespace Borbo
                 }
             }
 
+            //lol
+            LanguageAPI.Add("ITEM_SHOCKNEARBY_PICKUP", "lol");
+            LanguageAPI.Add("ITEM_AUTOCASTEQUIPMENT_PICKUP", "lol");
+            LanguageAPI.Add("ITEM_EXECUTELOWHEALTHELITE_PICKUP", "lol");
+
+            InitializeCoreModules();
+            new ContentPacks().Initialize();
+        }
+
+        private void InitializeEverything()
+        {
             IL.RoR2.Orbs.DevilOrb.OnArrival += BuffDevilOrb;
 
             BalanceCategory currentCategory = BalanceCategory.StateOfDefenseAndHealing;
@@ -142,19 +154,13 @@ namespace Borbo
                     JadeElephantChanges();
                 }
 
-                // medkit
-                if (GetConfigBool(currentCategory, true, "Medkit"))
-                {
-                    RoR2Content.Buffs.MedkitHeal.isDebuff = true;
-                }
-
                 // steak
-               // if (GetConfigBool(currentCategory, true, "Bison Steak"))
-               // {
-               //     GetStatCoefficients += MeatReduceHealth;
-               //     FreshMeatStackingFix();
-               //     MeatBuff();
-               // }
+                if (GetConfigBool(currentCategory, true, "Bison Steak"))
+                {
+                    GetStatCoefficients += MeatReduceHealth;
+                    FreshMeatStackingFix();
+                    MeatBuff();
+                }
 
                 // nkuhana D+H
                 if (GetConfigBool(currentCategory, true, "(D+H) NKuhanas Opinion"))
@@ -261,18 +267,14 @@ namespace Borbo
                 // enemy blacklist
                 if (GetConfigBool(currentCategory, true, "Enemy Blacklist"))
                 {
-                    this.ChangeAIBlacklists();
-                    AIBlacklistSingleItem(RoR2Content.Items.NovaOnHeal);
-                    AIBlacklistSingleItem(RoR2Content.Items.Mushroom);
-                    AIBlacklistSingleItem(RoR2Content.Items.Medkit);
-                    AIBlacklistSingleItem(RoR2Content.Items.Tooth);
+                    this.ChangeEquipmentBlacklists();
+                    this.HealingItemBlacklist();
                 }
 
                 // enigma artifact
                 if (GetConfigBool(currentCategory, true, "Enigma Artifact"))
                 {
-                    RoR2Content.Equipment.CrippleWard.enigmaCompatible = true;
-                    RoR2Content.Equipment.Jetpack.enigmaCompatible = true;
+                    this.ChangeEnigmaBlacklists();
                 }
 
                 // stuns
@@ -418,16 +420,8 @@ namespace Borbo
 
                 //this.DoSadistScavenger();
             }
-
-
-            //lol
-            LanguageAPI.Add("ITEM_SHOCKNEARBY_PICKUP", "lol");
-            LanguageAPI.Add("ITEM_AUTOCASTEQUIPMENT_PICKUP", "lol");
-            LanguageAPI.Add("ITEM_EXECUTELOWHEALTHELITE_PICKUP", "lol");
-
-            InitializeCoreModules();
-            new ContentPacks().Initialize();
         }
+
         GameObject meatballNapalmPool;
         private void CreateMeatballNapalm()
         {

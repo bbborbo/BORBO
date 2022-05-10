@@ -109,8 +109,8 @@ namespace Borbo
         {
             ILCursor c = new ILCursor(il);
 
-            int itemCountLocation = 51;
-            int totalDamageMultiplierLocation = 56;
+            int itemCountLocation = 80;
+            int totalDamageMultiplierLocation = 85;
 
             c.GotoNext(MoveType.After,
                 x => x.MatchLdsfld("RoR2.RoR2Content/Items", "IceRing"),
@@ -119,7 +119,7 @@ namespace Borbo
                 );
 
             c.GotoNext(MoveType.Before,
-                x => x.MatchLdcR4(out _),
+                x => x.MatchLdcR4(out _), //original damage multiplier, to be replaced
                 x => x.MatchLdloc(itemCountLocation),
                 x => x.MatchConvR4(),
                 x => x.MatchMul(),
@@ -132,7 +132,8 @@ namespace Borbo
                 x => x.MatchLdloc(totalDamageMultiplierLocation),
                 x => x.MatchCallOrCallvirt(out _)
                 );
-            c.Emit(OpCodes.Ldloc_0);
+            //c.Index--;
+            c.Emit(OpCodes.Ldloc_2);
             c.EmitDelegate<Func<float, CharacterBody, float>>((damage, self) =>
             {
                 float dam = self.baseDamage * runaldBaseDamage;
@@ -145,8 +146,8 @@ namespace Borbo
         {
             ILCursor c = new ILCursor(il);
 
-            int itemCountLocation = 51;
-            int totalDamageMultiplierLocation = 56;
+            int itemCountLocation = 81;
+            int totalDamageMultiplierLocation = 91;
 
             c.GotoNext(MoveType.After,
                 x => x.MatchLdsfld("RoR2.RoR2Content/Items", "FireRing"),
@@ -155,7 +156,7 @@ namespace Borbo
                 );
 
             c.GotoNext(MoveType.Before,
-                x => x.MatchLdcR4(out _),
+                x => x.MatchLdcR4(out _), //original damage multiplier, to be replaced
                 x => x.MatchLdloc(itemCountLocation),
                 x => x.MatchConvR4(),
                 x => x.MatchMul(),
@@ -168,7 +169,7 @@ namespace Borbo
                 x => x.MatchLdloc(totalDamageMultiplierLocation),
                 x => x.MatchCallOrCallvirt(out _)
                 );
-            c.Emit(OpCodes.Ldloc_0);
+            c.Emit(OpCodes.Ldloc_2);
             c.EmitDelegate<Func<float, CharacterBody, float>>((damage, self) =>
             {
                 float dam = self.baseDamage * kjaroBaseDamage;

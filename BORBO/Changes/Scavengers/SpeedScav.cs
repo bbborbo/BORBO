@@ -29,7 +29,7 @@ namespace Borbo.Scavengers
 
             //green
             AddItemInfo(RoR2Content.Items.Feather.name, 2);
-            AddItemInfo(RoR2Content.Items.TempestOnKill.name, 2);
+            AddItemInfo(RoR2Content.Items.JumpBoost.name, 2);
             AddItemInfo(RoR2Content.Items.EquipmentMagazine.name, 3);
 
             //red

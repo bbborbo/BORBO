@@ -56,9 +56,10 @@ namespace Borbo
 
             Assets.projectilePrefabs.Add(impBleedSpikePrefab);
 
-            IL.RoR2.GlobalEventManager.OnHitEnemy += UpdateShatterspleenBleedRights;
+            IL.RoR2.GlobalEventManager.OnHitEnemy += RevokeShatterspleenBleedRights;
             IL.RoR2.GlobalEventManager.OnCharacterDeath += RevokeShatterspleenDeathRights;
             GetStatCoefficients += RemoveShatterspleenCrit;
+            On.RoR2.CharacterBody.RecalculateStats += ShatterspleenBleedChance;
             On.RoR2.GlobalEventManager.OnHitEnemy += NewShatterspleenFunctionality;
             On.RoR2.CharacterBody.RemoveBuff_BuffIndex += FireShatterspleenBleedSpike;
 
@@ -71,6 +72,15 @@ namespace Borbo
                 $"These spikes release {releaseSpeed} seconds at a time, " +
                 $"dealing {Tools.ConvertDecimal(spikeDamageCoefficient)} BASE damage and bleeding enemies hit " +
                 $"for {Tools.ConvertDecimal(2.4f * spikeProcCoefficient)} base damage.");
+        }
+
+        private void ShatterspleenBleedChance(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        {
+            orig(self);
+            if (self.inventory.GetItemCount(RoR2Content.Items.BleedOnHitAndExplode) > 0)
+            {
+                self.bleedChance += shatterspleenBleedChance;
+            }
         }
 
         private void RemoveShatterspleenCrit(CharacterBody sender, StatHookEventArgs args)
@@ -148,52 +158,9 @@ namespace Borbo
             orig(self, damageInfo, victim);
         }
 
-        private void UpdateShatterspleenBleedRights(ILContext il)
+        private void RevokeShatterspleenBleedRights(ILContext il)
         {
             ILCursor c = new ILCursor(il);
-
-            int invLoc = 3;
-            int daggerCountLoc = 22;
-            int spleenCount = 0;
-            c.GotoNext(MoveType.After,
-                x => x.MatchLdloc(out invLoc),
-                x => x.MatchLdsfld("RoR2.RoR2Content/Items", "BleedOnHit"),
-                x => x.MatchCallOrCallvirt<RoR2.Inventory>(nameof(RoR2.Inventory.GetItemCount)),
-                x => x.MatchStloc(out daggerCountLoc)
-                );
-
-
-            c.GotoNext(MoveType.After,
-                x => x.MatchLdloc(daggerCountLoc),
-                x => x.MatchLdcI4(0),
-                x => x.MatchCgt()
-                );
-            c.Index--;
-            c.Emit(OpCodes.Ldloc, invLoc);
-            c.EmitDelegate<Func<int, Inventory, int>>((minBleed, inv) =>
-            {
-                if (inv != null)
-                {
-                    spleenCount = inv.GetItemCount(RoR2Content.Items.BleedOnHitAndExplode);
-                }
-                return minBleed - spleenCount;
-            });
-
-            c.GotoNext(MoveType.Before,
-                x => x.MatchLdarg(1), //damageInfo
-                x => x.MatchLdfld<DamageInfo>("procCoefficient")
-                );
-
-            c.Emit(OpCodes.Ldloc, invLoc);
-            c.EmitDelegate<Func<float, Inventory, float>>((baseBleedChance, inv) =>
-            {
-                float additionalBleed = 0;
-                if (spleenCount > 0)
-                {
-                    additionalBleed += shatterspleenBleedChance;
-                }
-                return baseBleedChance + additionalBleed; 
-            });
 
             c.GotoNext(MoveType.After,
                 x => x.MatchLdsfld("RoR2.RoR2Content/Items", "BleedOnHitAndExplode"),

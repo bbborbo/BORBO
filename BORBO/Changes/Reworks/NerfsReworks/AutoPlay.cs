@@ -34,8 +34,8 @@ namespace Borbo
 		private static float willowispBaseRange = 16f;
 		private static float willowispStackRange = 0f;
 
-		private static float gasBaseBurnDuration = 0.5f;
-		private static float gasStackBurnDuration = 2f;
+		private static float gasBaseBurnDamage = 0.5f;
+		private static float gasStackBurnDamage = 2f;
 		private static float gasBaseDamage = 0.5f;
 		private static float gasStackDamage = 0;
 
@@ -84,8 +84,8 @@ namespace Borbo
                 $"<style=cIsDamage>12m</style> <style=cStack>(+4m per stack)</style> " +
                 $"for <style=cIsDamage>{Tools.ConvertDecimal(gasBaseDamage)}</style> base damage. " +
                 $"Additionally, enemies <style=cIsDamage>burn</style> " +
-                $"for <style=cIsDamage>{50 * (gasBaseBurnDuration + gasStackBurnDuration)}%</style> " +
-                $"<style=cStack>(+{50 * (gasStackBurnDuration)}% per stack)</style> base damage.");
+                $"for <style=cIsDamage>{50 * (gasBaseBurnDamage + gasStackBurnDamage)}%</style> " +
+                $"<style=cStack>(+{50 * (gasStackBurnDamage)}% per stack)</style> base damage.");
         }
 
         private void ResonanceDiscNerfs()
@@ -249,9 +249,43 @@ namespace Borbo
 
 				return forceOut;
 			});
-        }
+		}
 
-        private void GasChanges(ILContext il)
+		private void GasChanges(ILContext il)
+		{
+			ILCursor c = new ILCursor(il);
+
+			c.GotoNext(MoveType.Before,
+				x => x.MatchStfld<RoR2.InflictDotInfo>(nameof(RoR2.InflictDotInfo.totalDamage))
+				);
+			c.Index--;
+			c.Emit(OpCodes.Ldarg_0);
+			c.Emit(OpCodes.Ldarg_1);
+			c.EmitDelegate<Func<float, DamageReport, int, float>>((currentDamage, damageReport, itemCount) =>
+			{
+				float newBurnDamage = currentDamage;
+
+				newBurnDamage = (gasBaseBurnDamage + gasStackBurnDamage * itemCount) * damageReport.attackerBody.damage;
+
+				return newBurnDamage;
+			});
+
+			c.GotoNext(MoveType.Before,
+				x => x.MatchStfld<RoR2.BlastAttack>(nameof(RoR2.BlastAttack.baseDamage))
+				);
+			c.Emit(OpCodes.Ldarg_0);
+			c.Emit(OpCodes.Ldarg_1);
+			c.EmitDelegate<Func<float, DamageReport, int, float>>((currentDamage, damageReport, itemCount) =>
+			{
+				float newHitDamage = currentDamage;
+
+				newHitDamage = (gasBaseDamage + gasStackDamage * itemCount) * damageReport.attackerBody.damage;
+
+				return newHitDamage;
+			});
+		}
+
+		private void GasChangesOld(ILContext il)
 		{
 			ILCursor c = new ILCursor(il);
 
@@ -268,7 +302,7 @@ namespace Borbo
 			{
 				float newDuration = currentDuration;
 
-				newDuration = gasBaseBurnDuration + gasStackBurnDuration * itemCount;
+				newDuration = gasBaseBurnDamage + gasStackBurnDamage * itemCount;
 
 				return newDuration;
 			});

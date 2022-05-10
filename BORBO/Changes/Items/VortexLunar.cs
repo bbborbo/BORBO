@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Borbo.Items
 {
@@ -41,9 +42,9 @@ namespace Borbo.Items
         public override ItemTier Tier => ItemTier.Lunar;
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfInteraction;
 
-        public override GameObject ItemModel => RoR2Content.Equipment.Gateway.pickupModelPrefab;
+        public override GameObject ItemModel => Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Gateway/PickupVase.prefab").WaitForCompletion();
 
-        public override Sprite ItemIcon => RoR2Content.Equipment.Gateway.pickupIconSprite;
+        public override Sprite ItemIcon => Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Gateway/texVaseIcon.png").WaitForCompletion();
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
@@ -53,6 +54,7 @@ namespace Borbo.Items
         public override void Hooks()
         {
             On.RoR2.GlobalEventManager.OnHitEnemy += AscendedVortexOnHit;
+            On.RoR2.EquipmentCatalog.SetEquipmentDefs += Gah;
         }
 
         private void AscendedVortexOnHit(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, RoR2.GlobalEventManager self, RoR2.DamageInfo damageInfo, GameObject victim)
@@ -183,13 +185,18 @@ namespace Borbo.Items
 
         public override void Init(ConfigFile config)
         {
-            RoR2Content.Equipment.Gateway.canDrop = false;
-            RoR2Content.Equipment.Gateway.enigmaCompatible = false;
             CreateProjectile();
             CreateItem();
             CreateLang();
             CreateBuff();
             Hooks();
+        }
+
+        private void Gah(On.RoR2.EquipmentCatalog.orig_SetEquipmentDefs orig, EquipmentDef[] newEquipmentDefs)
+        {
+            RoR2Content.Equipment.Gateway.canDrop = false;
+            RoR2Content.Equipment.Gateway.enigmaCompatible = false;
+            orig(newEquipmentDefs);
         }
 
         private void CreateProjectile()
