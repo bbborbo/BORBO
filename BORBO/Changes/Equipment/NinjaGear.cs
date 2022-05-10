@@ -66,7 +66,7 @@ namespace Borbo.Equipment
                             origin = damageInfo.position,
                             rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero) ? damageInfo.force : UnityEngine.Random.onUnitSphere)
                         };
-                        EffectManager.SpawnEffect(HealthComponent.AssetReferences.bearEffectPrefab, effectData, true);
+                        EffectManager.SpawnEffect(HealthComponent./*private*/AssetReferences.bearEffectPrefab, effectData, true);
                         //Util.PlaySound(StealthMode.enterStealthSound, self.gameObject);
                         damageInfo.rejected = true;
                         CreateNinjaSmokeBomb(self.body);
@@ -134,7 +134,7 @@ namespace Borbo.Equipment
                 blastAttack.damageType = DamageType.Stun1s;
                 blastAttack.baseForce = StealthMode.blastAttackForce;
                 blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
-                blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
+                blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;
                 blastAttack.Fire();
 
                 EffectManager.SpawnEffect(StealthMode.smokeBombEffectPrefab, new EffectData

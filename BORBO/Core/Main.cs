@@ -38,8 +38,8 @@ namespace Borbo
 
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     [BepInPlugin("com.Borbo.BORBO", "BORBO", "0.5.0")]
-    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(BuffAPI), nameof(PrefabAPI), 
-        nameof(EffectAPI), nameof(ResourcesAPI), nameof(DirectorAPI), 
+    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(PrefabAPI), 
+        nameof(DirectorAPI), 
         nameof(ItemAPI), nameof(RecalculateStatsAPI), nameof(EliteAPI))]
 
     internal partial class Main : BaseUnityPlugin
@@ -149,12 +149,12 @@ namespace Borbo
                 }
 
                 // steak
-                if (GetConfigBool(currentCategory, true, "Bison Steak"))
-                {
-                    GetStatCoefficients += MeatReduceHealth;
-                    FreshMeatStackingFix();
-                    MeatBuff();
-                }
+               // if (GetConfigBool(currentCategory, true, "Bison Steak"))
+               // {
+               //     GetStatCoefficients += MeatReduceHealth;
+               //     FreshMeatStackingFix();
+               //     MeatBuff();
+               // }
 
                 // nkuhana D+H
                 if (GetConfigBool(currentCategory, true, "(D+H) NKuhanas Opinion"))

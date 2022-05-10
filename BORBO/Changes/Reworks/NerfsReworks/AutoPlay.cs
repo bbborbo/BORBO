@@ -6,6 +6,7 @@ using R2API;
 using RoR2;
 using RoR2.Orbs;
 using RoR2.Projectile;
+using RoR2.Items;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,8 +49,8 @@ namespace Borbo
 
 		private void BuffDisciple()
 		{
-			On.RoR2.CharacterBody.SprintWispBehavior.FixedUpdate += FixDiscipleBS;
-			IL.RoR2.CharacterBody.SprintWispBehavior.Fire += NerfDiscipleDamage;
+			On.RoR2.Items.SprintWispBodyBehavior.FixedUpdate += FixDiscipleBS;
+			IL.RoR2.Items.SprintWispBodyBehavior.Fire += NerfDiscipleDamage;
 			useDiscipleKnockbackSlow = true;
 
 			LanguageAPI.Add("ITEM_SPRINTWISP_DESC",
@@ -138,7 +139,7 @@ namespace Borbo
 
 			c.GotoNext(MoveType.After,
 				x => x.MatchLdflda<HealthComponent>("itemCounts"),
-				x => x.MatchLdfld<HealthComponent.ItemCounts>("thorns"),
+				x => x.MatchLdfld<HealthComponent./*private*/ItemCounts>("thorns"),
 				x => x.MatchLdcI4(0)
 				);
 			c.Index--;
@@ -176,22 +177,22 @@ namespace Borbo
 				x => x.MatchStfld<RoR2.Orbs.DevilOrb>("damageValue")
 				);
 			c.Emit(OpCodes.Ldarg_0);
-			c.EmitDelegate<Func<float, SprintWispBehavior, float>>((damageIn, behavior) => {
+			c.EmitDelegate<Func<float, SprintWispBodyBehavior, float>>((damageIn, behavior) => {
 				float damageOut = damageIn / behavior.stack;
 				return damageOut;
             });
 		}
 
-        private void FixDiscipleBS(On.RoR2.CharacterBody.SprintWispBehavior.orig_FixedUpdate orig, CharacterBody.SprintWispBehavior self)
+        private void FixDiscipleBS(On.RoR2.Items.SprintWispBodyBehavior.orig_FixedUpdate orig, SprintWispBodyBehavior self)
 		{
 			CharacterBody body = self.body;
 			if (body.isSprinting)
 			{
-				self.fireTimer -= Time.fixedDeltaTime;
-				if (self.fireTimer <= 0f)
+				self./*private*/fireTimer -= Time.fixedDeltaTime;
+				if (self./*private*/fireTimer <= 0f)
 				{
-					self.fireTimer += (body.baseMoveSpeed * 1.45f) / (body.moveSpeed * self.stack);
-					self.Fire();
+					self./*private*/fireTimer += (body.baseMoveSpeed * 1.45f) / (body.moveSpeed * self.stack);
+					self./*private*/Fire();
 				}
 			}
 		}

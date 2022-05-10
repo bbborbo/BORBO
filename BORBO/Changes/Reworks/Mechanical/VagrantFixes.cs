@@ -22,12 +22,12 @@ namespace Borbo
             On.EntityStates.VagrantMonster.ChargeMegaNova.OnEnter += (orig, self) =>
             {
                 orig(self);
-                self.duration = EntityStates.VagrantMonster.ChargeMegaNova.baseDuration;
+                self./*private*/duration = EntityStates.VagrantMonster.ChargeMegaNova.baseDuration;
             };
             On.EntityStates.VagrantNovaItem.ChargeState.OnEnter += (orig, self) =>
             {
                 orig(self);
-                self.duration = 3;
+                self./*private*/duration = 3;
             };
         }
     }

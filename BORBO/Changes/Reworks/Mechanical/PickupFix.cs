@@ -35,12 +35,12 @@ namespace Borbo
         {
             if (NetworkServer.active && TeamComponent.GetObjectTeam(other.gameObject) == self.teamFilter.teamIndex)
             {
-                if (self.gravitateTarget)
+                if (self./*private*/gravitateTarget)
                 {
-                    if (other.gameObject.transform == self.gravitateTarget)
+                    if (other.gameObject.transform == self./*private*/gravitateTarget)
                         return;
 
-                    HealthComponent targetHealthComponent = self.gravitateTarget.GetComponent<HealthComponent>();
+                    HealthComponent targetHealthComponent = self./*private*/gravitateTarget.GetComponent<HealthComponent>();
                     if (targetHealthComponent && targetHealthComponent.body.isPlayerControlled)
                         return;
                 }
@@ -50,16 +50,16 @@ namespace Borbo
                 {
                     if (component.body.isPlayerControlled)
                     {
-                        self.gravitateTarget = other.gameObject.transform;
+                        self./*private*/gravitateTarget = other.gameObject.transform;
                         return;
                     }
                 }
 
-                if (!self.gravitateTarget)
+                if (!self./*private*/gravitateTarget)
                 {
                     if (self.gravitateAtFullHealth)
                     {
-                        self.gravitateTarget = other.gameObject.transform;
+                        self./*private*/gravitateTarget = other.gameObject.transform;
                     }
                 }
             }

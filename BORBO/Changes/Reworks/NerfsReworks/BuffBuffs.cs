@@ -19,11 +19,13 @@ namespace Borbo
 
         float deathMarkBonusDamage = 0.3f;
 
-        private void FreshMeatStackingFix()
-        {
-            RoR2Content.Buffs.MeatRegenBoost.canStack = true;
-            GetStatCoefficients += LetMeatActuallyStack;
-        }
+
+        //meat buff broken, sad, :(, removed the buff internally so cannot fix without making a new buff whichi might to later,,, cya freinds,,,
+      //  private void FreshMeatStackingFix()
+      //  {
+      //      RoR2Content.Buffs.MeatRegenBoost.canStack = true;
+      //      GetStatCoefficients += LetMeatActuallyStack;
+      //  }
 
         float elephantBuffDuration = 10;
         int elephantArmor = 200;
@@ -52,15 +54,16 @@ namespace Borbo
             return true;
         }
 
-        private void LetMeatActuallyStack(CharacterBody sender, StatHookEventArgs args)
-        {
-            int meatBuffCount = sender.GetBuffCount(RoR2Content.Buffs.MeatRegenBoost);
-
-            if (meatBuffCount > 1)
-            {
-                args.baseRegenAdd += 2 * (1 + 0.2f * (sender.level - 1)) * (meatBuffCount - 1);
-            }
-        }
+        //see above
+     //   private void LetMeatActuallyStack(CharacterBody sender, StatHookEventArgs args)
+     //   {
+     //       int meatBuffCount = sender.GetBuffCount(RoR2Content.Buffs.MeatRegenBoost);
+     //
+     //       if (meatBuffCount > 1)
+     //       {
+     //           args.baseRegenAdd += 2 * (1 + 0.2f * (sender.level - 1)) * (meatBuffCount - 1);
+     //       }
+     //   }
         #endregion
 
         #region slows
@@ -86,7 +89,7 @@ namespace Borbo
         {
             float aspdDecreaseAmt = 0;
 
-            if (sender.HasBuff(RoR2Content.Buffs.Slow30)) //tar
+            if (sender.HasBuff(RoR2Content.Buffs.ClayGoo)) //tar
                 aspdDecreaseAmt += tarSlowAspdReduction;
             if (sender.HasBuff(RoR2Content.Buffs.Slow50)) //kit
                 aspdDecreaseAmt += kitSlowAspdReduction;

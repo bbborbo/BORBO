@@ -77,7 +77,7 @@ namespace Borbo.Equipment
 
                 if (def != null)
                 {
-                    foreach (GameObject bodyPrefab in BodyCatalog.bodyPrefabs)
+                    foreach (GameObject bodyPrefab in BodyCatalog./*private*/bodyPrefabs)
                     {
                         CharacterModel model = bodyPrefab.GetComponentInChildren<CharacterModel>();
                         if (model)
@@ -127,13 +127,13 @@ namespace Borbo.Equipment
                     if(skillLocator != null)
                     {
                         //apply skill reset
-                        if (NetworkServer.active && !skillLocator.networkIdentity.hasAuthority)
+                        if (NetworkServer.active && !skillLocator./*private*/networkIdentity.hasAuthority)
                         {
                             NetworkWriter networkWriter = new NetworkWriter();
                             networkWriter.StartMessage(63);
                             networkWriter.Write(skillLocator.gameObject);
                             networkWriter.FinishMessage();
-                            NetworkConnection clientAuthorityOwner = skillLocator.networkIdentity.clientAuthorityOwner;
+                            NetworkConnection clientAuthorityOwner = skillLocator./*private*/networkIdentity.clientAuthorityOwner;
                             if (clientAuthorityOwner != null)
                             {
                                 clientAuthorityOwner.SendWriter(networkWriter, QosChannelIndex.defaultReliable.intVal);
@@ -209,7 +209,7 @@ namespace Borbo.Equipment
             Debug.Log("sdhjfgbhjad");
             bool b = false;
 
-            HurtBox hurtBox = slot.currentTarget.hurtBox;
+            HurtBox hurtBox = slot./*private*/currentTarget.hurtBox;
             if (hurtBox)
             {
                 CharacterBody targetBody = hurtBox.healthComponent.body;
@@ -218,7 +218,7 @@ namespace Borbo.Equipment
                 {
                     if (targetBody.HasBuff(Assets.executionDebuffIndex))
                     {
-                        slot.InvalidateCurrentTarget();
+                        slot./*private*/InvalidateCurrentTarget();
                     }
                     else
                     {
@@ -255,7 +255,7 @@ namespace Borbo.Equipment
                         };
                         blastAttack.Fire();
 
-                        slot.InvalidateCurrentTarget();
+                        slot./*private*/InvalidateCurrentTarget();
 
                         b = true;
                     }
