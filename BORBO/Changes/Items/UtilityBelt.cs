@@ -30,9 +30,9 @@ namespace Borbo.Items
 
         public override ItemTier Tier => ItemTier.Tier2;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("prefabs/NullModel");
+        public override GameObject ItemModel => LegacyResourcesAPI.Load<GameObject>("prefabs/NullModel");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("textures/miscicons/texWIPIcon");
+        public override Sprite ItemIcon => LegacyResourcesAPI.Load<Sprite>("textures/miscicons/texWIPIcon");
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfHealth;
         public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Healing , ItemTag.Utility };
 
@@ -104,7 +104,7 @@ namespace Borbo.Items
                 utilityBeltCooldown.buffColor = Color.black;
                 utilityBeltCooldown.canStack = true;
                 utilityBeltCooldown.isDebuff = false;
-                utilityBeltCooldown.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffGenericShield");
+                utilityBeltCooldown.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffGenericShield");
             };
 
             Assets.buffDefs.Add(utilityBeltCooldown);

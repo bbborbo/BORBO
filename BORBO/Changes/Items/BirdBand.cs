@@ -34,9 +34,9 @@ namespace Borbo.Items
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfDefenseAndHealing;
         public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Healing };
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("prefabs/NullModel");
+        public override GameObject ItemModel => LegacyResourcesAPI.Load<GameObject>("prefabs/NullModel");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("textures/miscicons/texWIPIcon");
+        public override Sprite ItemIcon => LegacyResourcesAPI.Load<Sprite>("textures/miscicons/texWIPIcon");
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
@@ -90,7 +90,7 @@ namespace Borbo.Items
                 birdBuff.buffColor = Color.green;
                 birdBuff.canStack = false;
                 birdBuff.isDebuff = false;
-                birdBuff.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffElementalRingsReadyIcon");
+                birdBuff.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffElementalRingsReadyIcon");
             };
             Assets.buffDefs.Add(birdBuff);
             birdDebuff = ScriptableObject.CreateInstance<BuffDef>();
@@ -99,7 +99,7 @@ namespace Borbo.Items
                 birdDebuff.buffColor = Color.blue;
                 birdDebuff.canStack = true;
                 birdDebuff.isDebuff = true;
-                birdDebuff.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffElementalRingsCooldownIcon");
+                birdDebuff.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffElementalRingsCooldownIcon");
             };
             Assets.buffDefs.Add(birdDebuff);
         }

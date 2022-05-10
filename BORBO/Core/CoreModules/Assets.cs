@@ -100,7 +100,7 @@ namespace Borbo.CoreModules
             noRazorwire.canStack = false;
             noRazorwire.isDebuff = true;
             noRazorwire.name = "NoRazorwire";
-            noRazorwire.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffEntangleIcon");
+            noRazorwire.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffEntangleIcon");
 
             buffDefs.Add(noRazorwire);
         }
@@ -154,7 +154,7 @@ namespace Borbo.CoreModules
             executionDebuffIndex.canStack = true;
             executionDebuffIndex.isDebuff = false;
             executionDebuffIndex.name = "ExecutionDebuffStackable";
-            executionDebuffIndex.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffNullifiedIcon");
+            executionDebuffIndex.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffNullifiedIcon");
 
             buffDefs.Add(executionDebuffIndex);
         }
@@ -167,7 +167,7 @@ namespace Borbo.CoreModules
             luckBuffIndex.canStack = true;
             luckBuffIndex.isDebuff = false;
             luckBuffIndex.name = "LuckBuffStackable";
-            luckBuffIndex.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffNullifiedIcon");
+            luckBuffIndex.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffNullifiedIcon");
 
             buffDefs.Add(luckBuffIndex);
         }

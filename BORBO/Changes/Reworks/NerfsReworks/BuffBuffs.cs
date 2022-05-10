@@ -67,8 +67,8 @@ namespace Borbo
         #endregion
 
         #region slows
-        GameObject templarPrefab = Resources.Load<GameObject>("prefabs/characterbodies/ClayBruiserBody");
-        GameObject chimeraWispPrefab = Resources.Load<GameObject>("prefabs/characterbodies/LunarWispBody");
+        GameObject templarPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/characterbodies/ClayBruiserBody");
+        GameObject chimeraWispPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/characterbodies/LunarWispBody");
         static float tarSlowAspdReduction = 0.3f;
         static float kitSlowAspdReduction = 0.3f;
         static float chronoSlowAspdReduction = 0.5f;

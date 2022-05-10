@@ -21,13 +21,13 @@ namespace Borbo
 		float resdiscDecayRate = 2f; //1.25f
 
 
-		private GameObject daggerPrefab = Resources.Load<GameObject>("Prefabs/Projectiles/DaggerProjectile");
-		private GameObject willowispPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/WilloWispDelay");
-		private GameObject spleenPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/BleedOnHitAndExplodeDelay");
-		private GameObject fireworkProjectilePrefab = Resources.Load<GameObject>("prefabs/projectiles/FireworkProjectile");
-		private GameObject resdiscProjectilePrefab = Resources.Load<GameObject>("prefabs/projectiles/LaserTurbineBomb");
+		private GameObject daggerPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/DaggerProjectile");
+		private GameObject willowispPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/WilloWispDelay");
+		private GameObject spleenPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/BleedOnHitAndExplodeDelay");
+		private GameObject fireworkProjectilePrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/FireworkProjectile");
+		private GameObject resdiscProjectilePrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/LaserTurbineBomb");
 
-		private GameObject meatballProjectilePrefab = Resources.Load<GameObject>("Prefabs/Projectiles/FireMeatBall");
+		private GameObject meatballProjectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/FireMeatBall");
 
 		private static float willowispBaseDamage = 3.5f;
 		private static float willowispScaleFraction = 0.8f;

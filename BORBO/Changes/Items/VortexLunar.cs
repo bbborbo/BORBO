@@ -77,7 +77,7 @@ namespace Borbo.Items
                             damageInfo.position, Util.QuaternionSafeLookRotation(Vector3.zero), 
                             attackerBody.gameObject, 0f, 0f, false, DamageColorIndex.Default, null, 0);
 
-                        EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/JellyfishNova"), new EffectData
+                        EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/JellyfishNova"), new EffectData
                         {
                             origin = damageInfo.position,
                             scale = vortexRadius
@@ -194,7 +194,7 @@ namespace Borbo.Items
 
         private void CreateProjectile()
         {
-            vortexWormholeProjectile = Resources.Load<GameObject>("Prefabs/Projectiles/GravSphere").InstantiateClone("VortexWormholeProjectile", true);
+            vortexWormholeProjectile = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/GravSphere").InstantiateClone("VortexWormholeProjectile", true);
             VortexWormholeBehavior wormholeBehavior = vortexWormholeProjectile.AddComponent<VortexWormholeBehavior>();
             wormholeBehavior.projectileController = vortexWormholeProjectile.GetComponent<ProjectileController>();
             wormholeBehavior.projectileSimple = vortexWormholeProjectile.GetComponent<ProjectileSimple>();
@@ -213,7 +213,7 @@ namespace Borbo.Items
                 vortexCooldownDebuff.buffColor = Color.magenta;
                 vortexCooldownDebuff.canStack = false;
                 vortexCooldownDebuff.isDebuff = true;
-                vortexCooldownDebuff.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffMercExposeIcon");
+                vortexCooldownDebuff.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffMercExposeIcon");
             };
             Assets.buffDefs.Add(vortexCooldownDebuff);
         }

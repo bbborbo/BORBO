@@ -431,7 +431,7 @@ namespace Borbo
         GameObject meatballNapalmPool;
         private void CreateMeatballNapalm()
         {
-            meatballNapalmPool = Resources.Load<GameObject>("prefabs/projectiles/beetlequeenacid").InstantiateClone("NapalmFire", true);
+            meatballNapalmPool = LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/beetlequeenacid").InstantiateClone("NapalmFire", true);
 
             Color napalmColor = new Color32(255, 120, 0, 255);
 
@@ -457,7 +457,7 @@ namespace Borbo
             transform.Find("Spittle").gameObject.SetActive(false);
 
             GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(
-                Resources.Load<GameObject>("prefabs/FireTrail").GetComponent<DamageTrail>().segmentPrefab, transform.transform);
+                LegacyResourcesAPI.Load<GameObject>("prefabs/FireTrail").GetComponent<DamageTrail>().segmentPrefab, transform.transform);
             ParticleSystem.MainModule main = gameObject.GetComponent<ParticleSystem>().main;
             main.duration = 8f;
             main.gravityModifier = -0.075f;

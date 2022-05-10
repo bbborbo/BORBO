@@ -60,9 +60,9 @@ namespace Borbo.Equipment
             $"\n<style=cMono>Power anomaly detected..." +
             $"\nInitiating reboot procedure in {buffDuration}...</style>";
 
-        public override GameObject EquipmentModel => Resources.Load<GameObject>("prefabs/pickupmodels/PickupTeslaCoil");
+        public override GameObject EquipmentModel => LegacyResourcesAPI.Load<GameObject>("prefabs/pickupmodels/PickupTeslaCoil");
 
-        public override Sprite EquipmentIcon => Resources.Load<Sprite>("textures/itemicons/texTeslaCoilIcon");
+        public override Sprite EquipmentIcon => LegacyResourcesAPI.Load<Sprite>("textures/itemicons/texTeslaCoilIcon");
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfHealth;
         public override HookType Type { get; set; } = HookType.Shield;
 

@@ -13,7 +13,7 @@ namespace Borbo
     partial class Main
     {
         string baseTscavTokenName = "BorboTscav";
-        MultiCharacterSpawnCard twistedScavengerSpawnCard = Resources.Load<MultiCharacterSpawnCard>("SpawnCards/CharacterSpawnCards/cscScavLunar");
+        MultiCharacterSpawnCard twistedScavengerSpawnCard = LegacyResourcesAPI.Load<MultiCharacterSpawnCard>("SpawnCards/CharacterSpawnCards/cscScavLunar");
 
         void DoSpeedScavenger()
         {
@@ -26,7 +26,7 @@ namespace Borbo
 
             //green
             AddItemInfo(ref itemInfos, RoR2Content.Items.Feather.name, 2);
-            AddItemInfo(ref itemInfos, RoR2Content.Items.TempestOnKill.name, 2);
+            AddItemInfo(ref itemInfos, RoR2Content.Items.JumpBoost.name, 2);
             AddItemInfo(ref itemInfos, RoR2Content.Items.EquipmentMagazine.name, 3);
 
             //red
@@ -160,8 +160,8 @@ namespace Borbo
             nameToken = baseTscavTokenName + nameToken;
             LanguageAPI.Add(nameToken, fullName);
 
-            GameObject masterObject = Resources.Load<GameObject>("prefabs/charactermasters/ScavLunar1Master").InstantiateClone($"{nameToken}Master", true);
-            GameObject bodyObject = Resources.Load<GameObject>("prefabs/characterbodies/ScavLunar1Body").InstantiateClone($"{nameToken}Body", true);
+            GameObject masterObject = LegacyResourcesAPI.Load<GameObject>("prefabs/charactermasters/ScavLunar1Master").InstantiateClone($"{nameToken}Master", true);
+            GameObject bodyObject = LegacyResourcesAPI.Load<GameObject>("prefabs/characterbodies/ScavLunar1Body").InstantiateClone($"{nameToken}Body", true);
 
             CharacterMaster master = masterObject.GetComponent<CharacterMaster>();
             master.bodyPrefab = bodyObject;

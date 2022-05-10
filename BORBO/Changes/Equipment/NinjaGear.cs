@@ -12,7 +12,7 @@ namespace Borbo.Equipment
 {
     class NinjaGear : EquipmentBase<NinjaGear>
     {
-        static GameObject novaEffectPrefab = Resources.Load<GameObject>("prefabs/effects/JellyfishNova");
+        static GameObject novaEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/JellyfishNova");
 
         static bool createSmokeBomb = true;
         static float smokeBombRadius = 13f;
@@ -34,9 +34,9 @@ namespace Borbo.Equipment
 
         public override string EquipmentLore => "";
 
-        public override GameObject EquipmentModel => Resources.Load<GameObject>("prefabs/NullModel");
+        public override GameObject EquipmentModel => LegacyResourcesAPI.Load<GameObject>("prefabs/NullModel");
 
-        public override Sprite EquipmentIcon => Resources.Load<Sprite>("textures/miscicons/texWIPIcon");
+        public override Sprite EquipmentIcon => LegacyResourcesAPI.Load<Sprite>("textures/miscicons/texWIPIcon");
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfDefenseAndHealing;
 
         public override bool CanDrop { get; } = true;
@@ -105,7 +105,7 @@ namespace Borbo.Equipment
                 motor.Motor.ForceUnground();
                 GenericCharacterMain.ApplyJumpVelocity(motor, slot.characterBody, hV, vV);
 
-                EffectManager.SpawnEffect(Resources.Load<GameObject>("Prefabs/Effects/BoostJumpEffect"), new EffectData
+                EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BoostJumpEffect"), new EffectData
                 {
                     origin = slot.characterBody.footPosition,
                     rotation = Util.QuaternionSafeLookRotation(motor.velocity)

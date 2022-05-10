@@ -36,9 +36,9 @@ namespace Borbo.Items
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfDefenseAndHealing;
         public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Utility };
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("prefabs/NullModel");
+        public override GameObject ItemModel => LegacyResourcesAPI.Load<GameObject>("prefabs/NullModel");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("textures/miscicons/texWIPIcon");
+        public override Sprite ItemIcon => LegacyResourcesAPI.Load<Sprite>("textures/miscicons/texWIPIcon");
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
@@ -96,7 +96,7 @@ namespace Borbo.Items
 				frozenShellArmorBuff.buffColor = Color.cyan;
 				frozenShellArmorBuff.canStack = false;
 				frozenShellArmorBuff.isDebuff = false;
-                frozenShellArmorBuff.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffGenericShield");
+                frozenShellArmorBuff.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texBuffGenericShield");
             };
             Assets.buffDefs.Add(frozenShellArmorBuff);
         }

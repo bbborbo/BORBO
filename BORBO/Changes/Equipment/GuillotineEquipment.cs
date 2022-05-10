@@ -52,9 +52,9 @@ namespace Borbo.Equipment
             "This old guillotine will serve both as an execution method and a symbol to strike fear into their hearts wherever they might be hiding.\n" +
             "\nPrimas V is alive!";
 
-        public override GameObject EquipmentModel => Resources.Load<GameObject>("prefabs/pickupmodels/PickupGuillotine");
+        public override GameObject EquipmentModel => LegacyResourcesAPI.Load<GameObject>("prefabs/pickupmodels/PickupGuillotine");
 
-        public override Sprite EquipmentIcon => Resources.Load<Sprite>("textures/itemicons/texGuillotineIcon");
+        public override Sprite EquipmentIcon => LegacyResourcesAPI.Load<Sprite>("textures/itemicons/texGuillotineIcon");
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfInteraction;
 
         public override bool CanDrop { get; } = true;

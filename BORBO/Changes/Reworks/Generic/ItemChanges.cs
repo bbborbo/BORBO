@@ -312,7 +312,7 @@ namespace Borbo
                 $"<style=cIsDamage>{Tools.ConvertDecimal(stickyDamageCoeffBase)}</style> " +
                 $"<style=cStack>(+{Tools.ConvertDecimal(stickyDamageCoeffStack)} per stack)</style> TOTAL damage.");
 
-            GameObject stickyPrefab = Resources.Load<GameObject>("prefabs/projectiles/StickyBomb");
+            GameObject stickyPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/StickyBomb");
             ProjectileImpactExplosion pie = stickyPrefab.GetComponent<ProjectileImpactExplosion>();
         }
 

@@ -13,7 +13,7 @@ namespace Borbo.Items
 {
     class AtgMissileMk3 : ItemBase<AtgMissileMk3>
     {
-        public static GameObject missilePrefab = Resources.Load<GameObject>("Prefabs/Projectiles/MissileProjectile");
+        public static GameObject missilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/MissileProjectile");
         public float procCoefficient = 0.6f;
         public float procChance = 15;
         public float atgMk3BaseDamageCoefficientPerRocket = 3;
@@ -60,9 +60,9 @@ namespace Borbo.Items
         public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Damage };
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfInteraction;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("prefabs/pickupmodels/PickupMissileLauncher");
+        public override GameObject ItemModel => LegacyResourcesAPI.Load<GameObject>("prefabs/pickupmodels/PickupMissileLauncher");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("textures/itemicons/texMissileLauncherIcon");
+        public override Sprite ItemIcon => LegacyResourcesAPI.Load<Sprite>("textures/itemicons/texMissileLauncherIcon");
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {

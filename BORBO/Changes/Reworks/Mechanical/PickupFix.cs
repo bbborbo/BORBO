@@ -10,11 +10,11 @@ namespace Borbo
 {
     internal partial class Main : BaseUnityPlugin
     {
-        GameObject healPack = Resources.Load<GameObject>("prefabs/networkedobjects/HealPack");
+        GameObject healPack = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/HealPack");
         float toothDuration = 15; //5
 
-        GameObject ammoPack = Resources.Load<GameObject>("prefabs/networkedobjects/AmmoPack");
-        GameObject moneyPack = Resources.Load<GameObject>("prefabs/networkedobjects/BonusMoneyPack");
+        GameObject ammoPack = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/AmmoPack");
+        GameObject moneyPack = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/BonusMoneyPack");
 
         public void FixPickupStats()
         {

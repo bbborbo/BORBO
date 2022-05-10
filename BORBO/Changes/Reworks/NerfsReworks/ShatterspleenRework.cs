@@ -30,7 +30,7 @@ namespace Borbo
         public static GameObject impBleedSpikePrefab;
         void ReworkShatterspleen()
         {
-            impBleedSpikePrefab = Resources.Load<GameObject>("prefabs/projectiles/ImpVoidspikeProjectile").InstantiateClone("ShatterspleenBleedSpike", true);
+            impBleedSpikePrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/ImpVoidspikeProjectile").InstantiateClone("ShatterspleenBleedSpike", true);
 
             ProjectileController pc = impBleedSpikePrefab.GetComponent<ProjectileController>();
             pc.procCoefficient = 1.0f;
