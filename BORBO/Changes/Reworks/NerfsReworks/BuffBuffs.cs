@@ -23,7 +23,7 @@ namespace Borbo
         
         private void FreshMeatStackingFix()
         {
-            JunkContent.Buffs.MeatRegenBoost.canStack = true;
+            ChangeBuffStacking(nameof(JunkContent.Buffs.MeatRegenBoost), true);
             GetStatCoefficients += LetMeatActuallyStack;
         }
 
@@ -31,7 +31,7 @@ namespace Borbo
         int elephantArmor = 200;
         private void JadeElephantChanges()
         {
-            RoR2Content.Buffs.ElephantArmorBoost.canStack = true;
+            ChangeBuffStacking(nameof(RoR2Content.Buffs.ElephantArmorBoost), true);
             On.RoR2.EquipmentSlot.FireGainArmor += ChangeElephantDuration;
             GetStatCoefficients += ReduceElephantArmor;
             LanguageAPI.Add("EQUIPMENT_GAINARMOR_PICKUP", "Gain massive armor for 10 seconds.");
@@ -107,7 +107,7 @@ namespace Borbo
         {
             if (!Tools.isLoaded("com.Skell.DeathMarkChange"))
             {
-                RoR2Content.Buffs.DeathMark.canStack = true;
+                ChangeBuffStacking(nameof(RoR2Content.Buffs.DeathMark), true);
                 IL.RoR2.GlobalEventManager.OnHitEnemy += DeathMarkFix_Stacking;
                 IL.RoR2.HealthComponent.TakeDamage += DeathMarkFix_Damage;
                 LanguageAPI.Add("ITEM_DEATHMARK_DESC",

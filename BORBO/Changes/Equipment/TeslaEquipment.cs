@@ -10,7 +10,7 @@ using static R2API.RecalculateStatsAPI;
 
 namespace Borbo.Equipment
 {
-    class TeslaEquipment : EquipmentBase
+    class TeslaEquipment : EquipmentBase<TeslaEquipment>
     {
         float extraShields = 0.20f;
 
@@ -80,29 +80,25 @@ namespace Borbo.Equipment
         public static void GetDisplayRules(On.RoR2.BodyCatalog.orig_Init orig)
         {
             orig();
-            if (DefDictionary.ContainsKey("BorboTesla"))
+            EquipmentDef def = instance.EquipDef;
+
+            if (def != null)
             {
-                EquipmentDef def;
-                DefDictionary.TryGetValue("BorboTesla", out def);
-
-                if (def != null)
+                foreach (GameObject bodyPrefab in BodyCatalog.bodyPrefabs)
                 {
-                    foreach (GameObject bodyPrefab in BodyCatalog.bodyPrefabs)
+                    CharacterModel model = bodyPrefab.GetComponentInChildren<CharacterModel>();
+                    if (model)
                     {
-                        CharacterModel model = bodyPrefab.GetComponentInChildren<CharacterModel>();
-                        if (model)
+                        ItemDisplayRuleSet idrs = model.itemDisplayRuleSet;
+                        if (idrs)
                         {
-                            ItemDisplayRuleSet idrs = model.itemDisplayRuleSet;
-                            if (idrs)
-                            {
-                                // clone the original item display rule
+                            // clone the original item display rule
 
-                                Array.Resize(ref idrs.keyAssetRuleGroups, idrs.keyAssetRuleGroups.Length + 1);
-                                idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].displayRuleGroup = idrs.FindDisplayRuleGroup(RoR2Content.Items.ShockNearby);
-                                idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].keyAsset = def;
+                            Array.Resize(ref idrs.keyAssetRuleGroups, idrs.keyAssetRuleGroups.Length + 1);
+                            idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].displayRuleGroup = idrs.FindDisplayRuleGroup(RoR2Content.Items.ShockNearby);
+                            idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].keyAsset = def;
 
-                                idrs.GenerateRuntimeValues();
-                            }
+                            idrs.GenerateRuntimeValues();
                         }
                     }
                 }
@@ -113,13 +109,8 @@ namespace Borbo.Equipment
         {
             On.RoR2.GlobalEventManager.OnCharacterDeath += GrantShieldOnKill;
             GetStatCoefficients += AddBonusShield;
-            On.RoR2.ItemCatalog.SetItemDefs += ChangeVanillaItemTier;
+            Main.RetierItem(nameof(RoR2Content.Items.ShockNearby), ItemTier.NoTier);
             On.RoR2.BodyCatalog.Init += GetDisplayRules;
-        }
-        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_SetItemDefs orig, ItemDef[] newItemDefs)
-        {
-            RoR2Content.Items.ShockNearby.tier = ItemTier.NoTier;
-            orig(newItemDefs);
         }
 
         private void AddBonusShield(CharacterBody sender, StatHookEventArgs args)

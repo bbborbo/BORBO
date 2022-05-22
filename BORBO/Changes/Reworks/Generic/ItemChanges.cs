@@ -16,8 +16,9 @@ namespace Borbo
 {
     partial class Main
     {
-        internal static void AIBlacklistSingleItem(ItemDef itemDef)
+        internal static void AIBlacklistSingleItem(string name)
         {
+            ItemDef itemDef = LoadItemDef(name);
             List<ItemTag> itemTags = new List<ItemTag>(itemDef.tags);
             itemTags.Add(ItemTag.AIBlacklist);
 
@@ -26,10 +27,10 @@ namespace Borbo
         #region blacklist
         void HealingItemBlacklist()
         {
-            AIBlacklistSingleItem(RoR2Content.Items.NovaOnHeal);
-            AIBlacklistSingleItem(RoR2Content.Items.Mushroom);
-            AIBlacklistSingleItem(RoR2Content.Items.Medkit);
-            AIBlacklistSingleItem(RoR2Content.Items.Tooth);
+            AIBlacklistSingleItem(nameof(RoR2Content.Items.NovaOnHeal));
+            AIBlacklistSingleItem(nameof(RoR2Content.Items.Mushroom));
+            AIBlacklistSingleItem(nameof(RoR2Content.Items.Medkit));
+            AIBlacklistSingleItem(nameof(RoR2Content.Items.Tooth));
         }
         #endregion
 
@@ -39,9 +40,9 @@ namespace Borbo
         public static float capacitorCooldown = 20f; //20
         void StunChanges()
         {
-            RoR2Content.Items.StunChanceOnHit.tier = ItemTier.NoTier;
+            RetierItem(nameof(RoR2Content.Items.StunChanceOnHit), ItemTier.NoTier);
 
-            RoR2Content.Equipment.Lightning.cooldown = capacitorCooldown;
+            LoadEquipDef(nameof(RoR2Content.Equipment.Lightning)).cooldown = capacitorCooldown;
             IL.RoR2.EquipmentSlot.FireLightning += CapacitorNerf;
             IL.RoR2.Orbs.LightningStrikeOrb.OnArrival += CapacitorBuff;
             LanguageAPI.Add("EQUIPMENT_LIGHTNING_DESC", $"Call down a lightning strike on a targeted monster, " +
@@ -316,7 +317,7 @@ namespace Borbo
         public static float stickyDamageCoeffStack = 0.4f;
         void StickyRework()
         {
-            RoR2Content.Items.StickyBomb.tier = ItemTier.Tier2;
+            RetierItem(nameof(RoR2Content.Items.StickyBomb), ItemTier.Tier2);
 
             IL.RoR2.GlobalEventManager.OnHitEnemy += StickyBombRework;
             LanguageAPI.Add("ITEM_STICKYBOMB_DESC",

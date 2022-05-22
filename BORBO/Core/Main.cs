@@ -18,6 +18,8 @@ using Borbo.Scavengers;
 using static R2API.RecalculateStatsAPI;
 using RoR2.Projectile;
 using ThreeEyedGames;
+using On.RoR2.ContentManagement;
+using UnityEngine.AddressableAssets;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -81,10 +83,10 @@ namespace Borbo
         {
             InitializeConfig();
             InitializeItems();
-            //InitializeEquipment();
+            InitializeEquipment();
             //InitializeEliteEquipment();
             //InitializeScavengers();
-            RoR2Application.onLoad += InitializeEverything;
+            InitializeEverything();
 
             if (isAELoaded)
             {
@@ -286,7 +288,7 @@ namespace Borbo
                 // the backup
                 if (GetConfigBool(currentCategory, true, "The Backup Equipment"))
                 {
-                    RoR2Content.Equipment.DroneBackup.cooldown = 60;
+                    LoadEquipDef(nameof(RoR2Content.Equipment.DroneBackup)).cooldown = 60;
                 }
 
                 string slowChangesTitle = " Slow Attack Speed Packet";
@@ -421,6 +423,57 @@ namespace Borbo
                 //this.DoSadistScavenger();
             }
         }
+
+        #region modify items and equips
+        static public void RetierItem(string itemName, ItemTier tier)
+        {
+            ItemDef def = LoadItemDef(itemName);
+            if (def != null)
+            {
+                def.tier = tier;
+                def.deprecatedTier = tier;
+            }
+        }
+        public static void RemoveEquipment(string equipName)
+        {
+            EquipmentDef equipDef = LoadEquipDef(equipName);
+            equipDef.canDrop = false;
+            equipDef.canBeRandomlyTriggered = false;
+            equipDef.enigmaCompatible = false;
+            equipDef.dropOnDeathChance = 0;
+        }
+        public static void ChangeEquipmentEnigma(string equipName, bool canEnigma)
+        {
+            EquipmentDef equipDef = LoadEquipDef(equipName);
+            if (equipDef != null)
+            {
+                equipDef.enigmaCompatible = canEnigma;
+            }
+        }
+        public static void ChangeBuffStacking(string buffName, bool canStack)
+        {
+            BuffDef buffDef = LoadBuffDef(buffName);
+            if(buffDef != null)
+            {
+                buffDef.canStack = canStack;
+            }
+        }
+        static ItemDef LoadItemDef(string name)
+        {
+            ItemDef itemDef = LegacyResourcesAPI.Load<ItemDef>("ItemDefs/" + name);
+            return itemDef;
+        }
+        static EquipmentDef LoadEquipDef(string name)
+        {
+            EquipmentDef equipDef = LegacyResourcesAPI.Load<EquipmentDef>("EquipmentDefs/" + name);
+            return equipDef;
+        }
+        static BuffDef LoadBuffDef(string name)
+        {
+            BuffDef buffDef = LegacyResourcesAPI.Load<BuffDef>("BuffDefs/" + name);
+            return buffDef;
+        }
+        #endregion
 
         GameObject meatballNapalmPool;
         private void CreateMeatballNapalm()

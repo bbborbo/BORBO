@@ -14,7 +14,7 @@ using UnityEngine.Networking;
 
 namespace Borbo.Equipment
 {
-    class GuillotineEquipment : EquipmentBase
+    class GuillotineEquipment : EquipmentBase<GuillotineEquipment>
     {
         bool strongerVsBosses = false;
         bool strongerVsElites = true;
@@ -27,9 +27,9 @@ namespace Borbo.Equipment
         string baseThreshold = Tools.ConvertDecimal(Assets.newExecutionThresholdBase + Assets.newExecutionThresholdStack);
         string stackThreshold = Tools.ConvertDecimal(Assets.newExecutionThresholdStack);
 
-        public override string EquipmentName => "Old Guillotine";
+        public override string EquipmentName => "The Guillotine";
 
-        public override string EquipmentLangTokenName => "GUILLOTINEEQUIPMENT";
+        public override string EquipmentLangTokenName => "BOBOGUILLOTINE";
 
         public override string EquipmentPickupDesc => "Target a low health monster to instantly kill them, empowering yourself. Stronger against Elites.";
 
@@ -60,7 +60,6 @@ namespace Borbo.Equipment
         public override bool CanDrop { get; } = true;
 
         public override float Cooldown { get; } = 25f;
-        public override string OptionalDefString { get; set; } = "BorboGuillotine";
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
@@ -70,29 +69,25 @@ namespace Borbo.Equipment
         public static void GetDisplayRules(On.RoR2.BodyCatalog.orig_Init orig)
         {
             orig();
-            if (DefDictionary.ContainsKey("BorboGuillotine"))
+
+            EquipmentDef def = instance.EquipDef;
+            if (def != null)
             {
-                EquipmentDef def;
-                DefDictionary.TryGetValue("BorboGuillotine", out def);
-
-                if (def != null)
+                foreach (GameObject bodyPrefab in BodyCatalog.bodyPrefabs)
                 {
-                    foreach (GameObject bodyPrefab in BodyCatalog./*private*/bodyPrefabs)
+                    CharacterModel model = bodyPrefab.GetComponentInChildren<CharacterModel>();
+                    if (model)
                     {
-                        CharacterModel model = bodyPrefab.GetComponentInChildren<CharacterModel>();
-                        if (model)
+                        ItemDisplayRuleSet idrs = model.itemDisplayRuleSet;
+                        if (idrs)
                         {
-                            ItemDisplayRuleSet idrs = model.itemDisplayRuleSet;
-                            if (idrs)
-                            {
-                                // clone the original item display rule
+                            // clone the original item display rule
 
-                                Array.Resize(ref idrs.keyAssetRuleGroups, idrs.keyAssetRuleGroups.Length + 1);
-                                idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].displayRuleGroup = idrs.FindDisplayRuleGroup(RoR2Content.Items.ExecuteLowHealthElite);
-                                idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].keyAsset = def;
+                            Array.Resize(ref idrs.keyAssetRuleGroups, idrs.keyAssetRuleGroups.Length + 1);
+                            idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].displayRuleGroup = idrs.FindDisplayRuleGroup(RoR2Content.Items.ExecuteLowHealthElite);
+                            idrs.keyAssetRuleGroups[idrs.keyAssetRuleGroups.Length - 1].keyAsset = def;
 
-                                idrs.GenerateRuntimeValues();
-                            }
+                            idrs.GenerateRuntimeValues();
                         }
                     }
                 }
@@ -103,13 +98,8 @@ namespace Borbo.Equipment
         {
             IL.RoR2.EquipmentSlot.UpdateTargets += GuillotineTargeting;
             On.RoR2.GlobalEventManager.OnCharacterDeath += GuillotineExecuteBehavior;
-            On.RoR2.ItemCatalog.SetItemDefs += ChangeVanillaItemTier;
+            Main.RetierItem(nameof(RoR2Content.Items.ExecuteLowHealthElite), ItemTier.NoTier);
             On.RoR2.BodyCatalog.Init += GetDisplayRules;
-        }
-        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_SetItemDefs orig, ItemDef[] newItemDefs)
-        {
-            RoR2Content.Items.ExecuteLowHealthElite.tier = ItemTier.NoTier;
-            orig(newItemDefs);
         }
 
         private void GuillotineExecuteBehavior(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
@@ -127,13 +117,13 @@ namespace Borbo.Equipment
                     if(skillLocator != null)
                     {
                         //apply skill reset
-                        if (NetworkServer.active && !skillLocator./*private*/networkIdentity.hasAuthority)
+                        if (NetworkServer.active && !skillLocator.networkIdentity.hasAuthority)
                         {
                             NetworkWriter networkWriter = new NetworkWriter();
                             networkWriter.StartMessage(63);
                             networkWriter.Write(skillLocator.gameObject);
                             networkWriter.FinishMessage();
-                            NetworkConnection clientAuthorityOwner = skillLocator./*private*/networkIdentity.clientAuthorityOwner;
+                            NetworkConnection clientAuthorityOwner = skillLocator.networkIdentity.clientAuthorityOwner;
                             if (clientAuthorityOwner != null)
                             {
                                 clientAuthorityOwner.SendWriter(networkWriter, QosChannelIndex.defaultReliable.intVal);
@@ -200,7 +190,7 @@ namespace Borbo.Equipment
         {
             On.RoR2.BodyCatalog.Init += GetDisplayRules;
             CreateEquipment();
-            CreateLang();
+            //CreateLang();
             Hooks();
         }
 
@@ -209,7 +199,7 @@ namespace Borbo.Equipment
             Debug.Log("sdhjfgbhjad");
             bool b = false;
 
-            HurtBox hurtBox = slot./*private*/currentTarget.hurtBox;
+            HurtBox hurtBox = slot.currentTarget.hurtBox;
             if (hurtBox)
             {
                 CharacterBody targetBody = hurtBox.healthComponent.body;
@@ -218,7 +208,7 @@ namespace Borbo.Equipment
                 {
                     if (targetBody.HasBuff(Assets.executionDebuffIndex))
                     {
-                        slot./*private*/InvalidateCurrentTarget();
+                        slot.InvalidateCurrentTarget();
                     }
                     else
                     {
@@ -255,7 +245,7 @@ namespace Borbo.Equipment
                         };
                         blastAttack.Fire();
 
-                        slot./*private*/InvalidateCurrentTarget();
+                        slot.InvalidateCurrentTarget();
 
                         b = true;
                     }

@@ -81,7 +81,8 @@ namespace Borbo.Items
                 ItemsDef.loreToken = "ITEM_" + ItemLangTokenName + "_LORE";
                 ItemsDef.pickupModelPrefab = ItemModel;
                 ItemsDef.pickupIconSprite = ItemIcon;
-                ItemsDef._itemTierDef = Addressables.LoadAssetAsync<ItemTierDef>($"RoR2/Base/Common/{tierNameString}Def.asset").WaitForCompletion();
+                ItemsDef.tier = Tier;
+                ItemsDef.deprecatedTier = Tier;
             }
             if (ItemTags.Length > 0) { ItemsDef.tags = ItemTags; }
 

@@ -106,7 +106,7 @@ namespace Borbo
         {
             ILCursor c = new ILCursor(il);
 
-            int countLoc = -1;
+            int countLoc = 6;
             c.GotoNext(MoveType.After,
                 x => x.MatchLdsfld("RoR2.RoR2Content/Items", "Hoof"),
                 x => x.MatchCallOrCallvirt<RoR2.Inventory>(nameof(RoR2.Inventory.GetItemCount)),
@@ -270,7 +270,7 @@ namespace Borbo
 
         private void MedkitNerf()
         {
-            RoR2Content.Buffs.MedkitHeal.isDebuff = true;
+            LoadBuffDef(nameof(RoR2Content.Buffs.MedkitHeal)).isDebuff = true;
             IL.RoR2.CharacterBody.RemoveBuff_BuffIndex += MedkitHealChange;
             LanguageAPI.Add("ITEM_MEDKIT_DESC",
                 $"2 seconds after getting hurt, <style=cIsHealing>heal</style> for " +

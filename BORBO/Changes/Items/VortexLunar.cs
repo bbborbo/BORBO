@@ -54,7 +54,6 @@ namespace Borbo.Items
         public override void Hooks()
         {
             On.RoR2.GlobalEventManager.OnHitEnemy += AscendedVortexOnHit;
-            On.RoR2.EquipmentCatalog.SetEquipmentDefs += Gah;
         }
 
         private void AscendedVortexOnHit(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, RoR2.GlobalEventManager self, RoR2.DamageInfo damageInfo, GameObject victim)
@@ -190,13 +189,7 @@ namespace Borbo.Items
             CreateLang();
             CreateBuff();
             Hooks();
-        }
-
-        private void Gah(On.RoR2.EquipmentCatalog.orig_SetEquipmentDefs orig, EquipmentDef[] newEquipmentDefs)
-        {
-            RoR2Content.Equipment.Gateway.canDrop = false;
-            RoR2Content.Equipment.Gateway.enigmaCompatible = false;
-            orig(newEquipmentDefs);
+            Main.RemoveEquipment(nameof(RoR2Content.Equipment.Gateway));
         }
 
         private void CreateProjectile()

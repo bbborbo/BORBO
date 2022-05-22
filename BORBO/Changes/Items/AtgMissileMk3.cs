@@ -104,8 +104,8 @@ namespace Borbo.Items
         public override void Hooks()
         {
             missilePrefab.GetComponent<ProjectileController>().procCoefficient = procCoefficient;
+            Main.RetierItem(nameof(RoR2Content.Items.Missile), ItemTier.NoTier);
             On.RoR2.CharacterBody.OnInventoryChanged += AddItemBehavior;
-            On.RoR2.ItemCatalog.SetItemDefs += ChangeVanillaItemTier;
             On.RoR2.GlobalEventManager.OnHitEnemy += AtgReworkLogic;
             IL.RoR2.GlobalEventManager.OnHitEnemy += RemoveVanillaAtgLogic;
             On.RoR2.BodyCatalog.Init += GetDisplayRules;
@@ -124,11 +124,6 @@ namespace Borbo.Items
         {
             orig(self);
             self.AddItemBehavior<Mk3MissileBehavior>(GetCount(self));
-        }
-        private void ChangeVanillaItemTier(On.RoR2.ItemCatalog.orig_SetItemDefs orig, ItemDef[] newItemDefs)
-        {
-            RoR2Content.Items.Missile.tier = ItemTier.NoTier;
-            orig(newItemDefs);
         }
 
         private void RemoveVanillaAtgLogic(ILContext il)

@@ -17,8 +17,8 @@ namespace Borbo
         };
         void ChangeEnigmaBlacklists()
         {
-            RoR2Content.Equipment.CrippleWard.enigmaCompatible = true;
-            RoR2Content.Equipment.Jetpack.enigmaCompatible = true;
+            ChangeEquipmentEnigma(nameof(RoR2Content.Equipment.CrippleWard), true);
+            ChangeEquipmentEnigma(nameof(RoR2Content.Equipment.Jetpack), true);
         }
         void ChangeEquipmentBlacklists()
         {

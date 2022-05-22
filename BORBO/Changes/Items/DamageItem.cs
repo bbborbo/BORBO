@@ -25,7 +25,7 @@ namespace Borbo.Items
 
         public override string ItemLore => "";
 
-        public override ItemTier Tier => ItemTier.Tier2;
+        public override ItemTier Tier => ItemTier.NoTier;
         public override ItemTag[] ItemTags { get; set; } = new ItemTag[] { ItemTag.Damage };
         public override BalanceCategory Category { get; set; } = BalanceCategory.StateOfDamage;
 
