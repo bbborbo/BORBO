@@ -77,7 +77,7 @@ namespace Borbo
         private void ShatterspleenBleedChance(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             orig(self);
-            if (self.inventory.GetItemCount(RoR2Content.Items.BleedOnHitAndExplode) > 0)
+            if (self.inventory?.GetItemCount(RoR2Content.Items.BleedOnHitAndExplode) > 0)
             {
                 self.bleedChance += shatterspleenBleedChance;
             }

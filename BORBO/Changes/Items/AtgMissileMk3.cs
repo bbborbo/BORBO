@@ -104,7 +104,7 @@ namespace Borbo.Items
         public override void Hooks()
         {
             missilePrefab.GetComponent<ProjectileController>().procCoefficient = procCoefficient;
-            Main.RetierItem(nameof(RoR2Content.Items.Missile), ItemTier.NoTier);
+            Main.RetierItem(nameof(RoR2Content.Items.Missile));
             On.RoR2.CharacterBody.OnInventoryChanged += AddItemBehavior;
             On.RoR2.GlobalEventManager.OnHitEnemy += AtgReworkLogic;
             IL.RoR2.GlobalEventManager.OnHitEnemy += RemoveVanillaAtgLogic;

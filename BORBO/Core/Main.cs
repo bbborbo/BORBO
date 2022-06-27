@@ -83,7 +83,7 @@ namespace Borbo
         {
             InitializeConfig();
             InitializeItems();
-            InitializeEquipment();
+            //InitializeEquipment();
             //InitializeEliteEquipment();
             //InitializeScavengers();
             InitializeEverything();
@@ -425,7 +425,7 @@ namespace Borbo
         }
 
         #region modify items and equips
-        static public void RetierItem(string itemName, ItemTier tier)
+        static public void RetierItem(string itemName, ItemTier tier = ItemTier.NoTier)
         {
             ItemDef def = LoadItemDef(itemName);
             if (def != null)
